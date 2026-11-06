@@ -1,0 +1,38 @@
+/* 07 context-mng panel styles: panel-scoped class names only, host theme vars. */
+.dsh-context-panel { display: flex; flex-direction: column; gap: 12px; height: 100%; min-height: 0; overflow: auto; padding: 16px 20px; box-sizing: border-box; color: var(--dsw-alias-label-primary, inherit); font-family: var(--dsh-font-family-text, inherit); }
+.dsh-context-header { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.dsh-context-title { margin: 0; font-size: 16px; line-height: 24px; font-weight: 600; }
+.dsh-context-close { appearance: none; border: 1px solid var(--dsw-alias-border-tertiary, rgba(0, 0, 0, .16)); background: transparent; color: inherit; width: 28px; height: 28px; border-radius: 6px; cursor: pointer; font-size: 16px; line-height: 1; }
+.dsh-context-close:hover { background: var(--dsw-alias-interactive-bg-hover, rgba(0, 0, 0, .05)); }
+.dsh-context-meta { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 12px; opacity: .86; }
+.dsh-context-field { display: inline-flex; gap: 6px; align-items: baseline; min-width: 0; }
+.dsh-context-field-label { opacity: .7; }
+.dsh-context-field-value { font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.dsh-context-actions { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.dsh-context-stage-group { display: inline-flex; gap: 4px; padding: 2px; border-radius: 8px; background: var(--dsw-alias-bg-secondary, rgba(0, 0, 0, .04)); }
+.dsh-context-stage, .dsh-context-button { appearance: none; border: 1px solid var(--dsw-alias-border-tertiary, rgba(0, 0, 0, .16)); background: transparent; color: inherit; border-radius: 6px; padding: 4px 10px; min-height: 28px; font-size: 12px; cursor: pointer; }
+.dsh-context-stage { border-color: transparent; font-family: var(--dsh-font-family-code, monospace); }
+.dsh-context-stage-active { background: var(--dsw-alias-bg-elevated, #fff); border-color: var(--dsw-alias-border-tertiary, rgba(0, 0, 0, .16)); }
+.dsh-context-button:disabled { opacity: .45; cursor: default; }
+.dsh-context-body { display: flex; flex-direction: column; gap: 10px; min-height: 0; }
+.dsh-context-state, .dsh-context-hint { margin: 0; font-size: 13px; line-height: 20px; opacity: .86; }
+.dsh-context-error { margin: 0; font-size: 13px; line-height: 20px; color: var(--dsw-alias-label-error, #b42318); }
+.dsh-context-totals, .dsh-context-estimate, .dsh-context-reported { display: flex; flex-wrap: wrap; gap: 10px; align-items: baseline; font-size: 13px; }
+.dsh-context-label { font-weight: 600; }
+.dsh-context-value { font-variant-numeric: tabular-nums; }
+.dsh-context-tag { font-size: 11px; padding: 1px 6px; border-radius: 999px; border: 1px solid var(--dsw-alias-border-tertiary, rgba(0, 0, 0, .16)); }
+.dsh-context-groups { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.dsh-context-group { border: 1px solid var(--dsw-alias-border-tertiary, rgba(0, 0, 0, .12)); border-radius: 8px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; }
+.dsh-context-group-summary { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; font-size: 12px; }
+.dsh-context-category { font-weight: 600; font-size: 13px; }
+.dsh-context-certainty { opacity: .72; font-family: var(--dsh-font-family-code, monospace); }
+.dsh-context-count { font-variant-numeric: tabular-nums; opacity: .82; }
+.dsh-context-bar { height: 4px; border-radius: 999px; background: var(--dsw-alias-bg-secondary, rgba(0, 0, 0, .06)); overflow: hidden; }
+.dsh-context-bar-fill { height: 100%; background: currentColor; opacity: .35; }
+.dsh-context-preview { margin: 0; font-size: 12px; line-height: 18px; opacity: .86; white-space: pre-wrap; overflow-wrap: anywhere; }
+.dsh-context-body-text { margin: 0; font-size: 12px; line-height: 18px; white-space: pre-wrap; overflow-wrap: anywhere; max-height: 320px; overflow: auto; font-family: var(--dsh-font-family-code, monospace); }
+.dsh-context-expand { align-self: flex-start; }
+.dsh-context-export-state-wrap { margin-top: auto; }
+.dsh-context-export-state { margin: 0; font-size: 12px; line-height: 18px; opacity: .9; overflow-wrap: anywhere; }
+.dsh-context-icon { display: block; }
+.dsh-context-icon-active { opacity: 1; }

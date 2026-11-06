@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "title": "上下文观察",
+    "description": "只读查看当前会话的上下文组成、来源、估算与 provider 实报用量，不修改会话内容。"
+  },
+  "panel.title": "上下文",
+  "panel.empty": "尚无本次请求观测。请打开已登记会话并等待模型步骤。",
+  "panel.unbound": "当前会话没有登记上下文绑定。请在插件配置中显式登记。",
+  "panel.denied": "无权读取该上下文。",
+  "panel.stale": "会话 surface 已变化，请刷新观察新状态。",
+  "panel.unavailable": "当前会话观察不可用。",
+  "panel.loading": "正在加载上下文观测…",
+  "panel.refresh": "刷新",
+  "panel.pause": "暂停刷新",
+  "panel.resume": "继续刷新",
+  "panel.export": "导出报告",
+  "panel.export.emptyHint": "请先登记导出根。",
+  "panel.estimated": "UTF-8 字节估算",
+  "panel.reported": "Provider 实报用量",
+  "panel.unknown": "未知",
+  "panel.truncated": "已截断",
+  "panel.group.expand": "展开文本",
+  "panel.group.collapse": "收起文本",
+  "panel.stage": "阶段",
+  "panel.fidelity": "精度",
+  "panel.requestedAt": "观测时间",
+  "panel.redactions": "已脱敏秘密"
+}

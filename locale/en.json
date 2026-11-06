@@ -1,0 +1,28 @@
+{
+  "meta": {
+    "title": "Context Observation",
+    "description": "Read-only view of the session context composition, provenance, estimates and provider-reported usage. Never modifies the conversation."
+  },
+  "panel.title": "Context",
+  "panel.empty": "No request observation yet. Open a bound session and wait for a model step.",
+  "panel.unbound": "This session has no registered context binding. Register it explicitly in the plugin configuration.",
+  "panel.denied": "Not authorized to read this context.",
+  "panel.stale": "The session surface changed; refresh to observe the new state.",
+  "panel.unavailable": "Observation is unavailable for this session.",
+  "panel.loading": "Loading context observation…",
+  "panel.refresh": "Refresh",
+  "panel.pause": "Pause refresh",
+  "panel.resume": "Resume refresh",
+  "panel.export": "Export report",
+  "panel.export.emptyHint": "Enable a registered export root first.",
+  "panel.estimated": "UTF-8 byte estimate",
+  "panel.reported": "Provider-reported usage",
+  "panel.unknown": "Unknown",
+  "panel.truncated": "Truncated",
+  "panel.group.expand": "Show text",
+  "panel.group.collapse": "Hide text",
+  "panel.stage": "Stage",
+  "panel.fidelity": "Fidelity",
+  "panel.requestedAt": "Observed at",
+  "panel.redactions": "Redacted secrets"
+}

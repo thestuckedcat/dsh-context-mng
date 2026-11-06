@@ -1,0 +1,41 @@
+$ node tools/context-report.mjs --fixture --out "$env:TEMP/dsh07-evidence/ctx-report-fixture.json"
+context-report: binding A -> session-fixture-a
+context-report: binding B -> session-fixture-b
+context-report: denied A+generation(B): STALE_SCOPE
+context-report: denied model-principal: OWNER_REQUIRED
+context-report: denied unknown-context: CONTEXT_UNBOUND
+context-report: denied export-ref-not-registered: OUTPUT_REF_DENIED
+context-report: wrote ctx-report-fixture.json status=saved digest=2d15c9f5d94b0446736c1dc3adfc3bf3d14ab8df1d1be21ee48b98bca2a32d62
+$ echo $LASTEXITCODE
+0
+
+Report invariants recomputed from the written JSON (sha256 of the canonical text):
+json_bytes=3607
+digest=2d15c9f5d94b0446736c1dc3adfc3bf3d14ab8df1d1be21ee48b98bca2a32d62
+groups=7
+categories=system,developer,user,assistant,tools,tool_result,unknown
+unknown_present=true
+redaction_total=3 (fake api_key / password / jwt replaced, values absent)
+reported_usage_field=provider_usage_chunk
+wire_verified=false
+canary_sk-proj-FA=false
+canary_Synthetic-=false
+canary_SESSION-B=false
+canary_eyJhbGciOi=false
+
+Report schema validation: contracts.validateObservation + contracts.validateReport both pass before printing
+(any failure exits 4 and prints only schema error paths).
+
+--- design fallback refusal (authenticated Host RPC/CLI required) ---
+$ node tools/context-report.mjs --session-ref session-x
+context-report: refusing --session-ref: a real session can only be read through the running Harness Host
+with authenticated Host RPC/CLI (the plugin connection channel / the Host UI); direct reads of the
+persisted session directory are not an authorized fallback. Use --fixture for the synthetic read-only report.
+$ echo $LASTEXITCODE
+3
+
+--- unsafe --out refusal (writes restricted to $env:TEMP) ---
+$ node tools/context-report.mjs --fixture --out 'E:\dsh\plugin\07-context-management\should-not-write.json'
+context-report: refusing --out "...should-not-write.json": only paths inside $env:TEMP are writable
+$ echo $LASTEXITCODE
+3

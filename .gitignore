@@ -1,0 +1,9 @@
+# 07 implementation artifacts that must never be committed
+.work07/
+.dsh-acl-recovery/
+.runtime/
+.tmp-recon/
+node_modules/
+*.log
+*.tmp
+.DS_Store

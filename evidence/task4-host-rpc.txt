@@ -1,0 +1,20 @@
+== starting dsh profile 'hosttest' ==
+URL=http://127.0.0.1:4637/?token=<redacted>
+INDEX_HTTP=303
+COOKIE_SET=dsh-auth-EJ5MsI6hr7LSda_ujemQ4UsNFXAfK5Tu5740V7LOcVs=<redacted>
+LIST_HTTP=200
+LIST_BODY={"schema_version":1,"operation_id":"op-smoke-list","view_epoch":1,"scope_generation":0,"status":"ok","data":{"contexts":[{"context_ref":"ctx-a","session_ref":"session-none","scope_id":"project-a","generation":3,"read":true,"export_root_refs":[]}]}}
+OBS_HTTP=200
+OBS_BODY={"schema_version":1,"operation_id":"op-smoke-obs","view_epoch":1,"scope_generation":3,"status":"unavailable","reason_code":"SESSION_UNAVAILABLE"}
+FORGED_HTTP=200
+FORGED_BODY={"schema_version":1,"operation_id":"invalid","view_epoch":0,"scope_generation":0,"status":"invalid","reason_code":"INVALID_REQUEST"}
+UNKNOWN_HTTP=404
+UNKNOWN_BODY=not found
+GROUP_HTTP=200
+GROUP_BODY={"schema_version":1,"operation_id":"op-smoke-group","view_epoch":1,"scope_generation":3,"status":"stale","reason_code":"STALE_OBSERVATION"}
+EXPORT_HTTP=200
+EXPORT_BODY={"schema_version":1,"operation_id":"op-smoke-export","view_epoch":1,"scope_generation":3,"status":"denied","reason_code":"OUTPUT_REF_DENIED"}
+NOAUTH_HTTP=401
+NOAUTH_BODY=unauthorized
+== stderr tail ==
+RESULT: done

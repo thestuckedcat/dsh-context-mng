@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-11-07T00:00:00.000Z",
+  "capability": "07",
+  "package": {
+    "name": "dsh-context-mng",
+    "version": "0.1.0",
+    "license": "MIT",
+    "artifact_sha256": null,
+    "note": "Source repository artifact; commit hash recorded by git after the delivery commit. This file is updated before each release with the packed artifact digest."
+  },
+  "host_version": "0.2.1-rc.5",
+  "host_license": "MIT",
+  "runtime_version": "Electron 44.7.0; implementation/test Node v26.13.0 (design baseline Node >=24.9; Node 24 not available on this machine)",
+  "sources": [
+    {
+      "source_id": "dsh-installed-desktop-runtime",
+      "kind": "host-runtime",
+      "repository": "https://github.com/deepseek-ai/deepseek-harness",
+      "commit": null,
+      "package": "@deepseek-ai/dsh-desktop-runtime",
+      "version": "0.2.1-rc.5",
+      "artifact_sha256": "e1b6f25fa937da98086c3e77af77aa14791105963c4d337a1c42179d232c6915",
+      "license": "MIT",
+      "license_file": null,
+      "adopted_files": [],
+      "adoption": "thin-adaptation",
+      "host_version": "0.2.1-rc.5",
+      "runtime_version": "Electron 44.7.0",
+      "verification_refs": [
+        "docs/compatibility.md",
+        "docs/implementation-route.md",
+        "evidence/task2-probe.json"
+      ],
+      "notes": "Read-only installed bytes; artifact_sha256 is the local app.asar. Pinned package file hashes are listed in docs/compatibility.md §1. No Host source is copied or redistributed."
+    },
+    {
+      "source_id": "dsh-context",
+      "kind": "reference-source",
+      "repository": "https://github.com/bowenliang123/dsh-context",
+      "commit": "73fd9a5c29e593c28311f4760da5d0b1bba0dc49",
+      "package": "dsh-context",
+      "version": "0.80.3",
+      "artifact_sha256": null,
+      "license": "Apache-2.0",
+      "license_file": null,
+      "adopted_files": [],
+      "adoption": "mechanism-only",
+      "host_version": null,
+      "runtime_version": null,
+      "verification_refs": [
+        "docs/implementation-route.md",
+        "docs/compatibility.md"
+      ],
+      "notes": "Mechanism reference only (source composition/estimate display, read-only panel organisation). No source, bundle or asset is copied. A locally installed 0.82.1 published artifact was inspected for behaviour comparison only; it is not a dependency and is not redistributed."
+    },
+    {
+      "source_id": "dsh-context-manager",
+      "kind": "reference-investigation",
+      "repository": "https://github.com/SkanderBog/dsh-context-manager",
+      "commit": null,
+      "package": null,
+      "version": null,
+      "artifact_sha256": null,
+      "license": "unknown",
+      "license_file": null,
+      "adopted_files": [],
+      "adoption": "investigation-only",
+      "host_version": null,
+      "runtime_version": null,
+      "verification_refs": [
+        "docs/implementation-route.md"
+      ],
+      "notes": "Investigation reference for observation/maintenance separation only. No fixed artifact or license evidence => never used as an executable dependency."
+    },
+    {
+      "source_id": "local-05-host-api-evidence",
+      "kind": "local-evidence",
+      "repository": null,
+      "commit": null,
+      "package": null,
+      "version": "0.2.1-rc.5",
+      "artifact_sha256": "2f5dd07cb5c744a29abbb8003a8a4cefd9e582c6e2538074ca299a0ddd02a3bf",
+      "license": "project-local",
+      "license_file": null,
+      "adopted_files": [],
+      "adoption": "reference-only",
+      "host_version": "0.2.1-rc.5",
+      "runtime_version": null,
+      "verification_refs": [
+        "../05-local-memory/evidence/host-api",
+        "docs/compatibility.md"
+      ],
+      "notes": "The referenced dsh-session/lib/index.js bytes are identical to the installed rc.5 bytes. No 05 business authorization is inherited for 07 routing."
+    }
+  ],
+  "dependency_policy": {
+    "runtime_dependencies": [],
+    "network_required": false,
+    "child_processes": false,
+    "auto_update_or_download": false,
+    "telemetry": false,
+    "notes": "The package has no npm runtime dependencies. Host-provided modules are peers supplied by the installed Harness at runtime."
+  }
+}

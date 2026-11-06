@@ -1,0 +1,70 @@
+{
+  "name": "dsh-context-mng",
+  "version": "0.1.0",
+  "description": "DeepSeek Harness context observation plugin: read-only composition, provenance, estimates, request-observed usage and a bounded local report, without modifying the conversation.",
+  "license": "MIT",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=24.9.0",
+    "dsh": "0.2.1-rc.5"
+  },
+  "exports": {
+    ".": "./index.js",
+    "./client": "./client.js",
+    "./locale/*.json": "./locale/*.json",
+    "./icon": "./icon.svg"
+  },
+  "files": [
+    "index.js",
+    "client.js",
+    "cordis.patch.yml",
+    "src/*.mjs",
+    "schemas/*.schema.json",
+    "tools/*.mjs",
+    "ui/*",
+    "locale/*.json",
+    "icon.svg",
+    "README.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "source-lock.json"
+  ],
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    },
+    "client": {
+      "platform": "web",
+      "immediately": true,
+      "inject": [
+        "@deepseek-ai/dsh-client-connection",
+        "@deepseek-ai/dsh-client-locale",
+        "@deepseek-ai/dsh-client-ui-layout",
+        "@deepseek-ai/dsh-client-ui-conversation"
+      ]
+    },
+    "compatibility": {
+      "dshReleases": {
+        "0.2.1-rc.5": "compatible"
+      }
+    }
+  },
+  "scripts": {
+    "test": "node --test tests/",
+    "test:noiso": "node --test --test-isolation=none tests/",
+    "test:lead": "node --test --test-isolation=none tests/access.test.mjs tests/service.test.mjs tests/rpc.test.mjs",
+    "probe": "node tools/probe-host.mjs --asar \"E:/dsh/resources/app.asar\"",
+    "smoke": "node tools/observe-smoke.mjs --fixture",
+    "report": "node tools/context-report.mjs --fixture"
+  },
+  "keywords": [
+    "deepseek-harness",
+    "dsh",
+    "cordis",
+    "plugin",
+    "context",
+    "observation",
+    "read-only"
+  ]
+}

@@ -1,0 +1,94 @@
+TAP version 13
+# Subtest: revision is per-session monotonic and identical snapshots dedupe
+ok 1 - revision is per-session monotonic and identical snapshots dedupe
+  ---
+  duration_ms: 4.1269
+  type: 'test'
+  ...
+# Subtest: dedupe separates capture stages and request refs
+ok 2 - dedupe separates capture stages and request refs
+  ---
+  duration_ms: 0.4494
+  type: 'test'
+  ...
+# Subtest: put does not mutate the caller observation and stores internal revisions
+ok 3 - put does not mutate the caller observation and stores internal revisions
+  ---
+  duration_ms: 0.2074
+  type: 'test'
+  ...
+# Subtest: entriesForSession is revision ordered; unknown observation ids resolve to null
+ok 4 - entriesForSession is revision ordered; unknown observation ids resolve to null
+  ---
+  duration_ms: 0.5088
+  type: 'test'
+  ...
+# Subtest: per-session snapshot cap evicts the oldest revisions first
+ok 5 - per-session snapshot cap evicts the oldest revisions first
+  ---
+  duration_ms: 0.3898
+  type: 'test'
+  ...
+# Subtest: snapshot byte cap trims previews with honest truncation flags
+ok 6 - snapshot byte cap trims previews with honest truncation flags
+  ---
+  duration_ms: 0.6995
+  type: 'test'
+  ...
+# Subtest: snapshot byte cap drops tail groups when preview trimming is insufficient, without faking completeness
+ok 7 - snapshot byte cap drops tail groups when preview trimming is insufficient, without faking completeness
+  ---
+  duration_ms: 1.4875
+  type: 'test'
+  ...
+# Subtest: default limits keep at most 8 snapshots and trim a single 2 MiB session snapshot
+ok 8 - default limits keep at most 8 snapshots and trim a single 2 MiB session snapshot
+  ---
+  duration_ms: 44.5398
+  type: 'test'
+  ...
+# Subtest: total cache limit evicts whole least-recently-used sessions
+ok 9 - total cache limit evicts whole least-recently-used sessions
+  ---
+  duration_ms: 0.5005
+  type: 'test'
+  ...
+# Subtest: invalidateSession clears bodies and keeps the revision sequence monotonic
+ok 10 - invalidateSession clears bodies and keeps the revision sequence monotonic
+  ---
+  duration_ms: 0.3801
+  type: 'test'
+  ...
+# Subtest: subscribe notifies only new revisions and contains listener failures
+ok 11 - subscribe notifies only new revisions and contains listener failures
+  ---
+  duration_ms: 0.2561
+  type: 'test'
+  ...
+# Subtest: trimmed snapshots are still structurally valid and deterministic
+ok 12 - trimmed snapshots are still structurally valid and deterministic
+  ---
+  duration_ms: 0.621
+  type: 'test'
+  ...
+# Subtest: dispose clears all bodies and refuses further writes
+ok 13 - dispose clears all bodies and refuses further writes
+  ---
+  duration_ms: 0.306
+  type: 'test'
+  ...
+# Subtest: invalid observations are rejected rather than cached
+ok 14 - invalid observations are rejected rather than cached
+  ---
+  duration_ms: 0.1706
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 67.8159

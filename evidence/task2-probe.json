@@ -1,0 +1,464 @@
+{
+  "schema_version": 1,
+  "tool": "tools/probe-host.mjs",
+  "command": "node tools/probe-host.mjs --asar E:/dsh/resources/app.asar --out C:\\Users\\admin\\AppData\\Local\\Temp\\dsh-8BQfMi\\task2-probe.json",
+  "started_at": "2026-11-06T18:15:53.297Z",
+  "finished_at": "2026-11-06T18:15:54.656Z",
+  "runtime": {
+    "node": "v26.13.0",
+    "platform": "win32",
+    "arch": "x64",
+    "tmpdir": "C:\\Users\\admin\\AppData\\Local\\Temp\\dsh-8BQfMi"
+  },
+  "host": {
+    "asar_path": "E:\\dsh\\resources\\app.asar",
+    "asar_bytes": 182766714,
+    "asar_sha256": "e1b6f25fa937da98086c3e77af77aa14791105963c4d337a1c42179d232c6915",
+    "package_version": "0.2.1-rc.5",
+    "header_bytes": 4760404,
+    "data_start": 4760412,
+    "entry_count": 18234,
+    "unpacked_entry_count": 1583
+  },
+  "pins": {
+    "source": "docs/compatibility.md §1",
+    "expected": {
+      "dsh-client-connection/lib/index.js": "0ebcca7583e082716f79b0b55bc1749d48269cc8db2989b043b321b57abd3684",
+      "dsh-client-connection/lib/client.browser.js": "dfc3544eb894c74b340a4c4c63a8c125fd2e983df9efed5885712574af994e62",
+      "dsh-client-ui-layout/lib/client.js": "eb011a7b5699fac7f3ad0aa15408f46a6cf47f79b8cc15db1f81739e81e70587",
+      "dsh-client-ui-renderer/lib/client.js": "dbdb3f26bfbc1d143bc8a0eed5982a2507c4f0cf8027e7c170f3bed3604be356",
+      "dsh-session/lib/index.js": "2f5dd07cb5c744a29abbb8003a8a4cefd9e582c6e2538074ca299a0ddd02a3bf"
+    },
+    "actual": {
+      "app.asar": "e1b6f25fa937da98086c3e77af77aa14791105963c4d337a1c42179d232c6915",
+      "dsh-client-connection/lib/index.js": "0ebcca7583e082716f79b0b55bc1749d48269cc8db2989b043b321b57abd3684",
+      "dsh-client-connection/lib/client.browser.js": "dfc3544eb894c74b340a4c4c63a8c125fd2e983df9efed5885712574af994e62",
+      "dsh-client-ui-layout/lib/client.js": "eb011a7b5699fac7f3ad0aa15408f46a6cf47f79b8cc15db1f81739e81e70587",
+      "dsh-client-ui-renderer/lib/client.js": "dbdb3f26bfbc1d143bc8a0eed5982a2507c4f0cf8027e7c170f3bed3604be356",
+      "dsh-session/lib/index.js": "2f5dd07cb5c744a29abbb8003a8a4cefd9e582c6e2538074ca299a0ddd02a3bf"
+    },
+    "asar_sha256_expected": "e1b6f25fa937da98086c3e77af77aa14791105963c4d337a1c42179d232c6915"
+  },
+  "closure": {
+    "roots": [
+      "@deepseek-ai/dsh-session",
+      "@deepseek-ai/dsh-llm",
+      "@deepseek-ai/cordis"
+    ],
+    "packages": [
+      {
+        "name": "@deepseek-ai/dsh-session",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@deepseek-ai/dsh-llm",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@deepseek-ai/cordis",
+        "version": "4.0.5"
+      },
+      {
+        "name": "@deepseek-ai/dsh-brand",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@deepseek-ai/dsh-util-values",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@deepseek-ai/dsh-scope",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@deepseek-ai/dsh-util-crypto",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@deepseek-ai/schemastery",
+        "version": "3.18.5"
+      },
+      {
+        "name": "zod",
+        "version": "4.4.3"
+      },
+      {
+        "name": "@deepseek-ai/dsh-timeout",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@deepseek-ai/dsh-typert-protocol",
+        "version": "0.2.1-rc.5"
+      },
+      {
+        "name": "@standard-schema/spec",
+        "version": "1.1.0"
+      },
+      {
+        "name": "@deepseek-ai/cosmokit",
+        "version": "1.8.6"
+      }
+    ],
+    "missing_packages": [],
+    "extracted_files": 1221,
+    "extracted_bytes": 10435688,
+    "skipped_files": 0,
+    "from_unpacked": 0,
+    "unreadable": [],
+    "temp_dir": null
+  },
+  "checks": [
+    {
+      "id": "asar.header_parsed",
+      "layer": "installed_bytes",
+      "description": "asar header parses as JSON and the data region starts after it",
+      "status": "pass",
+      "detail": {
+        "header_bytes": 4760404,
+        "data_start": 4760412,
+        "file_bytes": 182766714,
+        "entries": 18234,
+        "unpacked_entries": 1583
+      }
+    },
+    {
+      "id": "asar.sha256_matches_design_pin",
+      "layer": "installed_bytes",
+      "description": "app.asar SHA256 matches the digest pinned in docs/software-design.md §2",
+      "status": "pass",
+      "detail": "e1b6f25fa937da98086c3e77af77aa14791105963c4d337a1c42179d232c6915"
+    },
+    {
+      "id": "host.package_version",
+      "layer": "installed_bytes",
+      "description": "installed dsh/package.json declares 0.2.1-rc.5",
+      "status": "pass",
+      "detail": {
+        "name": "@deepseek-ai/dsh-desktop-runtime",
+        "version": "0.2.1-rc.5"
+      }
+    },
+    {
+      "id": "pins.compatibility_doc_parsed",
+      "layer": "installed_bytes",
+      "description": "docs/compatibility.md §1 lists the five pinned files",
+      "status": "pass",
+      "detail": {
+        "dsh-client-connection/lib/index.js": "0ebcca7583e082716f79b0b55bc1749d48269cc8db2989b043b321b57abd3684",
+        "dsh-client-connection/lib/client.browser.js": "dfc3544eb894c74b340a4c4c63a8c125fd2e983df9efed5885712574af994e62",
+        "dsh-client-ui-layout/lib/client.js": "eb011a7b5699fac7f3ad0aa15408f46a6cf47f79b8cc15db1f81739e81e70587",
+        "dsh-client-ui-renderer/lib/client.js": "dbdb3f26bfbc1d143bc8a0eed5982a2507c4f0cf8027e7c170f3bed3604be356",
+        "dsh-session/lib/index.js": "2f5dd07cb5c744a29abbb8003a8a4cefd9e582c6e2538074ca299a0ddd02a3bf"
+      }
+    },
+    {
+      "id": "pins.sha256:dsh-client-connection/lib/index.js",
+      "layer": "installed_bytes",
+      "description": "SHA256 of dsh-client-connection/lib/index.js matches docs/compatibility.md §1",
+      "status": "pass",
+      "detail": {
+        "bytes": 44434,
+        "unpacked": false
+      }
+    },
+    {
+      "id": "pins.sha256:dsh-client-connection/lib/client.browser.js",
+      "layer": "installed_bytes",
+      "description": "SHA256 of dsh-client-connection/lib/client.browser.js matches docs/compatibility.md §1",
+      "status": "pass",
+      "detail": {
+        "bytes": 60601,
+        "unpacked": false
+      }
+    },
+    {
+      "id": "pins.sha256:dsh-client-ui-layout/lib/client.js",
+      "layer": "installed_bytes",
+      "description": "SHA256 of dsh-client-ui-layout/lib/client.js matches docs/compatibility.md §1",
+      "status": "pass",
+      "detail": {
+        "bytes": 32834,
+        "unpacked": false
+      }
+    },
+    {
+      "id": "pins.sha256:dsh-client-ui-renderer/lib/client.js",
+      "layer": "installed_bytes",
+      "description": "SHA256 of dsh-client-ui-renderer/lib/client.js matches docs/compatibility.md §1",
+      "status": "pass",
+      "detail": {
+        "bytes": 78299,
+        "unpacked": false
+      }
+    },
+    {
+      "id": "pins.sha256:dsh-session/lib/index.js",
+      "layer": "installed_bytes",
+      "description": "SHA256 of dsh-session/lib/index.js matches docs/compatibility.md §1",
+      "status": "pass",
+      "detail": {
+        "bytes": 94982,
+        "unpacked": false
+      }
+    },
+    {
+      "id": "closure.complete",
+      "layer": "installed_bytes",
+      "description": "the dsh-session/dsh-llm/cordis dependency closure is present in the installed archive",
+      "status": "pass",
+      "detail": {
+        "packages": 13
+      }
+    },
+    {
+      "id": "closure.extracted",
+      "layer": "installed_bytes",
+      "description": "needed packages extracted to a temp dir; unpacked entries copied from app.asar.unpacked",
+      "status": "pass",
+      "detail": {
+        "extracted_files": 1221,
+        "extracted_bytes": 10435688,
+        "skipped_files": 0,
+        "from_unpacked": 0,
+        "session_lib_sha256": "2f5dd07cb5c744a29abbb8003a8a4cefd9e582c6e2538074ca299a0ddd02a3bf"
+      }
+    },
+    {
+      "id": "import.real_installed_bytes",
+      "layer": "installed_bytes",
+      "description": "real installed dsh-session/dsh-llm/cordis modules import from the extracted closure",
+      "status": "pass",
+      "detail": {
+        "session_entry": "dsh\\node_modules\\@deepseek-ai\\dsh-session\\lib\\index.js",
+        "llm_entry": "dsh\\node_modules\\@deepseek-ai\\dsh-llm\\lib\\index.js",
+        "cordis_entry": "dsh\\node_modules\\@deepseek-ai\\cordis\\lib\\index.js"
+      }
+    },
+    {
+      "id": "session.detached_create_and_append",
+      "layer": "installed_bytes",
+      "description": "real Session.create/append accepts a real rc.5 message event",
+      "status": "pass",
+      "detail": {
+        "id": "probe-detached-session",
+        "seq": 1,
+        "content_generation": 0
+      }
+    },
+    {
+      "id": "session.deriveMessages_frozen",
+      "layer": "installed_bytes",
+      "description": "deriveMessages() returns a new array of shared deep-frozen messages",
+      "status": "pass",
+      "detail": {
+        "messages": 1,
+        "keys": [
+          "content",
+          "id",
+          "role",
+          "source"
+        ]
+      }
+    },
+    {
+      "id": "session.deriveMessages_mutation_rejected",
+      "layer": "installed_bytes",
+      "description": "mutating a derived message throws and leaves the session log untouched",
+      "status": "pass",
+      "detail": {
+        "log_messages": 1
+      }
+    },
+    {
+      "id": "session.deriveMessages_snapshot_stability",
+      "layer": "installed_bytes",
+      "description": "later appends never grow or mutate an earlier derived snapshot",
+      "status": "pass",
+      "detail": {
+        "before": 1,
+        "after": 2,
+        "seq": 2
+      }
+    },
+    {
+      "id": "session.store_and_event_dispatch",
+      "layer": "installed_bytes",
+      "description": "real SessionStore publishes session/event through the real cordis Context",
+      "status": "pass",
+      "detail": {
+        "events": 1,
+        "seq": 1
+      }
+    },
+    {
+      "id": "session.deriveMessages_live_frozen",
+      "layer": "installed_bytes",
+      "description": "live SessionStore session deriveMessages() is frozen too",
+      "status": "pass",
+      "detail": {
+        "messages": 1
+      }
+    },
+    {
+      "id": "capture.surface_read_real_session",
+      "layer": "installed_bytes",
+      "description": "this plugin reads a real live session surface through the installed Session bytes",
+      "status": "pass",
+      "detail": {
+        "messages": 1,
+        "last_event_seq": 1,
+        "header": {
+          "id": "probe-live-session",
+          "cwd": "E:/dsh/plugin/07-context-management"
+        }
+      }
+    },
+    {
+      "id": "capture.observation_real_session",
+      "layer": "installed_bytes",
+      "description": "captureSurface produces a contract-valid history projection with a stable boundary",
+      "status": "pass",
+      "detail": {
+        "revision": 1,
+        "groups": 1,
+        "boundary": {
+          "session_ref": "probe-live-session",
+          "scope": {
+            "scope_id": "probe-scope",
+            "generation": 1,
+            "identity_digest": "628d981625b86bf34255d5e347b5cb50debc599a669900727ccee3e5b8d63b74"
+          },
+          "last_event_seq": 1,
+          "surface_generation": 0,
+          "route_revision": "route:unobserved",
+          "observation_epoch": 0
+        }
+      }
+    },
+    {
+      "id": "capture.group_read_real_session",
+      "layer": "installed_bytes",
+      "description": "readGroupTexts re-reads the live real session and returns redacted group text",
+      "status": "pass",
+      "detail": {
+        "groups": 1
+      }
+    },
+    {
+      "id": "capture.event_coalescing_real_dispatch",
+      "layer": "installed_bytes",
+      "description": "real session/event dispatch triggers one coalesced background sample and a new revision",
+      "status": "pass",
+      "detail": {
+        "revision": 2,
+        "last_event_seq": 2
+      }
+    },
+    {
+      "id": "llm.runtime_and_adapter",
+      "layer": "installed_bytes",
+      "description": "real LlmRuntime accepts a fake provider adapter on a real cordis Context",
+      "status": "pass",
+      "detail": {
+        "providers": [
+          {
+            "id": "probe-fake",
+            "name": "Probe fake provider"
+          }
+        ]
+      }
+    },
+    {
+      "id": "llm.waterfall_single_next",
+      "layer": "installed_bytes",
+      "description": "real ctx.waterfall(llm/stream) dispatch reaches the adapter with exactly one middleware next()",
+      "status": "pass",
+      "detail": {
+        "chain_next_calls": 1
+      }
+    },
+    {
+      "id": "llm.chunk_identity_order_count",
+      "layer": "installed_bytes",
+      "description": "wrapped stream yields the original chunk objects in order without buffering changes",
+      "status": "pass",
+      "detail": {
+        "chunks": 5,
+        "adapter_calls": 1
+      }
+    },
+    {
+      "id": "llm.usage_captured",
+      "layer": "installed_bytes",
+      "description": "provider usage chunk is captured into a request_observed observation of the original request",
+      "status": "pass",
+      "detail": {
+        "request_ref": "ctx-req-1-probe-llm-session-g1",
+        "usage": {
+          "request_ref": "ctx-req-1-probe-llm-session-g1",
+          "input_tokens": 21,
+          "output_tokens": 7,
+          "cached_input_tokens": 4,
+          "source": "provider_usage_chunk",
+          "is_final": true
+        }
+      }
+    },
+    {
+      "id": "llm.main_error_passthrough",
+      "layer": "installed_bytes",
+      "description": "an error thrown by the downstream stream is propagated unchanged by the transparent wrapper",
+      "status": "pass",
+      "detail": {
+        "error": "probe main-request sentinel",
+        "chunks_before_error": 1
+      }
+    },
+    {
+      "id": "llm.unbound_session_passthrough",
+      "layer": "installed_bytes",
+      "description": "unbound sessions are passed through with no observation and no content projection",
+      "status": "pass",
+      "detail": {
+        "chunks": 5
+      }
+    }
+  ],
+  "layers": {
+    "pinned_files": {
+      "layer": "installed_bytes",
+      "checks": 28,
+      "pass": 28,
+      "fail": 0,
+      "skip": 0,
+      "status": "pass"
+    },
+    "installed_bytes": {
+      "layer": "installed_bytes",
+      "checks": 28,
+      "pass": 28,
+      "fail": 0,
+      "skip": 0,
+      "status": "pass"
+    },
+    "full_host": {
+      "layer": "full host",
+      "status": "not_run",
+      "reason": "No rc.5 AgentLoop/host boot, no real model call, no GUI/Chromium journey and no network egress check were run; this probe only drives installed package bytes with synthetic adapters."
+    }
+  },
+  "summary": {
+    "pass": 28,
+    "fail": 0,
+    "skip": 0,
+    "total": 28
+  },
+  "limitations": [
+    "Installed-bytes layer only: the probe imports the real 0.2.1-rc.5 package bytes extracted from app.asar and drives the real cordis waterfall / LlmRuntime dispatch with a fake provider adapter. It does NOT boot a full rc.5 Host/AgentLoop turn, does not call a real model, and does not exercise the GUI/Chromium journey.",
+    "No network and no credentials: the provider adapter is a synthetic async iterable; usage values are synthetic.",
+    "Session probe uses synthetic sessions created with the installed Session/SessionStore code; no user profile or real conversation data is read.",
+    "waterfall observation is request_observed/wire_verified=false by design: listener ordering downstream of this plugin is not part of this probe and could still change the provider wire request.",
+    "Binary payloads (.node/.dll/.wasm/...) are not extracted into the temp closure; the imported JS graph does not require them. If a future installed build loads one at import time, that import check would fail rather than silently pass."
+  ],
+  "ok": true
+}

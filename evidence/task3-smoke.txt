@@ -1,0 +1,18 @@
+$ node tools/observe-smoke.mjs --fixture --network-evidence
+ok 1 - rpc observation.get returns the authorized session A observation
+ok 2 - A cannot read B (context/scope/caller joins are enforced)
+ok 3 - unbound session is never sampled
+ok 4 - capture install/dispose manages Host listener counts (dispose -> 0)
+ok 5 - local export is atomic, idempotent and never exposes absolute paths
+ok 6 - export writer denies traversal, non-directory and symlink targets
+ok 7 - session switch drops a late observation response (view epoch)
+ok 8 - client store transport failures use fixed codes only (no raw text)
+# network evidence: guards installed on fetch/WebSocket/XMLHttpRequest/EventSource, node:net/http/https/dns
+# network evidence: outbound attempts recorded = 0
+ok 9 - plugin module graph made zero outbound network attempts
+1..9
+# pass 9
+# fail 0
+# observe-smoke: all checks passed (with --network-evidence)
+$ echo $LASTEXITCODE
+0

@@ -1,0 +1,148 @@
+TAP version 13
+# Subtest: projectMessages returns exactly the frozen fragment shape and validates
+ok 1 - projectMessages returns exactly the frozen fragment shape and validates
+  ---
+  duration_ms: 3.3555
+  type: 'test'
+  ...
+# Subtest: groups use deterministic provenance ids and trusted source classification
+ok 2 - groups use deterministic provenance ids and trusted source classification
+  ---
+  duration_ms: 0.4666
+  type: 'test'
+  ...
+# Subtest: unknown source and body words never decide category or permission
+ok 3 - unknown source and body words never decide category or permission
+  ---
+  duration_ms: 0.2636
+  type: 'test'
+  ...
+# Subtest: synthetic secrets are absent from previews, group texts and digests surface
+ok 4 - synthetic secrets are absent from previews, group texts and digests surface
+  ---
+  duration_ms: 0.4295
+  type: 'test'
+  ...
+# Subtest: observed_digest is deterministic and covers redacted content only
+ok 5 - observed_digest is deterministic and covers redacted content only
+  ---
+  duration_ms: 0.8459
+  type: 'test'
+  ...
+# Subtest: provider-reported usage is never apportioned into group estimates
+ok 6 - provider-reported usage is never apportioned into group estimates
+  ---
+  duration_ms: 0.4766
+  type: 'test'
+  ...
+# Subtest: oversized group text is truncated with explicit flags instead of dropped
+ok 7 - oversized group text is truncated with explicit flags instead of dropped
+  ---
+  duration_ms: 0.1722
+  type: 'test'
+  ...
+# Subtest: preview honors maxPreviewChars without claiming data loss
+ok 8 - preview honors maxPreviewChars without claiming data loss
+  ---
+  duration_ms: 0.0991
+  type: 'test'
+  ...
+# Subtest: image and file modalities keep estimated tokens unknown and unpriced
+ok 9 - image and file modalities keep estimated tokens unknown and unpriced
+  ---
+  duration_ms: 0.2544
+  type: 'test'
+  ...
+# Subtest: tool definitions are an identified tools group and are redacted
+ok 10 - tool definitions are an identified tools group and are redacted
+  ---
+  duration_ms: 0.2874
+  type: 'test'
+  ...
+# Subtest: collectGroupTexts agrees with projectMessages for ids, counts and redactions
+ok 11 - collectGroupTexts agrees with projectMessages for ids, counts and redactions
+  ---
+  duration_ms: 0.3464
+  type: 'test'
+  ...
+# Subtest: empty input is a complete zero projection with a deterministic digest
+ok 12 - empty input is a complete zero projection with a deterministic digest
+  ---
+  duration_ms: 0.1615
+  type: 'test'
+  ...
+# Subtest: group ids and digest are stable across re-reads and extra messages
+ok 13 - group ids and digest are stable across re-reads and extra messages
+  ---
+  duration_ms: 0.3115
+  type: 'test'
+  ...
+# Subtest: a custom policy redactor is honored deterministically
+ok 14 - a custom policy redactor is honored deterministically
+  ---
+  duration_ms: 0.1043
+  type: 'test'
+  ...
+# Subtest: malformed or legacy messages never throw and stay unknown
+ok 15 - malformed or legacy messages never throw and stay unknown
+  ---
+  duration_ms: 0.1445
+  type: 'test'
+  ...
+# Subtest: projectMessages only ever covers the messages passed for one session (A/B)
+ok 16 - projectMessages only ever covers the messages passed for one session (A/B)
+  ---
+  duration_ms: 0.2833
+  type: 'test'
+  ...
+# Subtest: projection never mutates the input messages or tool definitions
+ok 17 - projection never mutates the input messages or tool definitions
+  ---
+  duration_ms: 0.3492
+  type: 'test'
+  ...
+# Subtest: the 05 marker whitelist is explicit prefixes only
+ok 18 - the 05 marker whitelist is explicit prefixes only
+  ---
+  duration_ms: 0.2931
+  type: 'test'
+  ...
+# Subtest: a trusted label without a v1 composition bucket stays unknown but identified
+ok 19 - a trusted label without a v1 composition bucket stays unknown but identified
+  ---
+  duration_ms: 0.0889
+  type: 'test'
+  ...
+# Subtest: the maxGroups bound drops tail groups with truncated/omitted flags
+ok 20 - the maxGroups bound drops tail groups with truncated/omitted flags
+  ---
+  duration_ms: 0.1296
+  type: 'test'
+  ...
+# Subtest: truncation never emits a lone surrogate half
+ok 21 - truncation never emits a lone surrogate half
+  ---
+  duration_ms: 0.8637
+  type: 'test'
+  ...
+# Subtest: a trimmed fragment can be re-hashed so digest and stored groups stay consistent
+ok 22 - a trimmed fragment can be re-hashed so digest and stored groups stay consistent
+  ---
+  duration_ms: 0.277
+  type: 'test'
+  ...
+# Subtest: observation and report schemas parse and match the contract key sets
+ok 23 - observation and report schemas parse and match the contract key sets
+  ---
+  duration_ms: 6.2122
+  type: 'test'
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 40.1412

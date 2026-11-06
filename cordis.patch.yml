@@ -1,0 +1,25 @@
+# 07 context-mng bundle patch.
+#
+# The capability is read-only by default. `access.registry` is the ONLY source
+# of authorized context bindings: entries must be registered here (or through
+# the same explicit, user-owned configuration path) before any session content
+# is sampled. Unknown/empty registry = visible "unbound" state, never implicit
+# access.
+- insert:
+    - id: context-mng
+      name: dsh-context-mng
+      config:
+        maintenance:
+          enabled: false
+        capture:
+          autoSampleSurface: true
+          requestObservation: true
+          agentPreStep: true
+          coalesceWindowMs: 100
+          maxRefreshHz: 10
+        access:
+          registry:
+            schema_version: 1
+            revision: 1
+            bindings: []
+            export_roots: []

@@ -1,0 +1,54 @@
+✔ client.js is a single rc.5 module-loader registration in the exact format (2.0169ms)
+✔ ui modules are embedded byte-identically in client.js (0.594ms)
+✔ locale dictionaries are embedded exactly from locale/*.json (0.5325ms)
+✔ all literal locale keys used by the panel exist in both dictionaries (0.1907ms)
+✔ client source contains no HTML injection, disk access or unfixed network target (1.2095ms)
+✔ factory is side-effect free and returns the declared plugin face (0.6307ms)
+✔ apply registers the main panel, sidebar entry, locale and returns cleanup (1.0098ms)
+✔ client-embedded store bootstraps context.list and observation.get with the wire envelope (3.3488ms)
+✔ client-embedded store drops a late response after a session switch (epoch abort) (0.9494ms)
+✔ client-embedded store maps transport failures to fixed codes without raw text (0.8289ms)
+✔ report.export is user-triggered, validated and never auto-retried (666.2271ms)
+✔ store: unbound session is never sampled (0.9424ms)
+✔ store: one in-flight poll at most, gated by visibility and pause (0.7962ms)
+✔ store: close aborts the in-flight poll, increments epoch and clears body text (0.7803ms)
+✔ store: generation mismatch and operation mismatch are dropped (0.4079ms)
+✔ store: business rejections map to explicit states; transport failures never leak text (0.6201ms)
+✔ store: group.read pagination fetches pages and clears text on a new observation (0.5745ms)
+✔ store: export state machine covers saved, conflict and denied without retry (0.39ms)
+✔ store: disposed store stops notifying subscribers (0.1992ms)
+✔ client BusinessResponse validation matches src/contracts.mjs on a matrix (0.2842ms)
+✔ client observation validation accepts fixtures the contract accepts (1.953ms)
+✔ panel renders the ready journey with separated estimate and provider usage (1.0548ms)
+✔ panel shows explicit empty/unbound/denied/stale/unavailable/error states (1.1727ms)
+✔ panel expands a group and renders the fetched redacted text as children (0.4241ms)
+✔ panel pause/resume and stage buttons drive the store (0.6185ms)
+✔ panel without a store degrades to an explicit unavailable state (0.1965ms)
+✔ writes canonical JSON atomically and returns a root-relative receipt (6.2829ms)
+✔ creates the temporary file in the same directory and fsyncs before rename (4.3454ms)
+✔ repeating identical content is idempotent (saved, same digest, no rewrite) (4.7041ms)
+✔ different content under the same file name conflicts without overwrite (4.3937ms)
+✔ rejects relative and missing export roots (0.5518ms)
+✔ rejects path traversal and non-leaf file names before touching disk (1.7268ms)
+✔ rejects an existing directory target and never replaces it (2.4166ms)
+✔ rejects a symlinked target (real symlink when the host allows it) (4.1081ms)
+ℹ real symlink unavailable on this host (EPERM); using injected fs adapter for the same code path
+✔ denies a symlink reported by an injected fs adapter (2.5904ms)
+✔ denies a symlinked parent (root realpath differs from the registered root) (1.844ms)
+✔ rejects an oversize report body via the configured limit (1.1038ms)
+✔ rejects report bodies that do not satisfy the report contract (1.2444ms)
+✔ refuses report bodies containing unredacted secret-like strings (1.2105ms)
+✔ cleans up the temp file and keeps the target absent when rename fails (2.9542ms)
+✔ rejects an invalid hidden writer limits object defensively (0.1398ms)
+ℹ tests 41
+ℹ suites 0
+ℹ pass 41
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 744.5886
+
+$ node --test --test-isolation=none tests/export.test.mjs tests/client-contract.test.mjs
+$ echo $LASTEXITCODE
+0
