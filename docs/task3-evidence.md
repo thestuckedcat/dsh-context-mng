@@ -97,11 +97,12 @@ Lead 在隔离 rc.5 host 上证实 `ctx.connection.rpc.handle(...)` 对 profile 
 - 浏览器同源 cookie 认证 owner Peer，Host 路由对非 owner 返回 403；
 - `report.export` 仍只在用户点击时调用，从不自动重试。
 
-`client.js` / `ui/context-store.js` 与 `tests/client-contract.test.mjs` 已按上述契约更新；`inject` 列表仍按
-任务硬要求保留 `['slots','layout','connection','sessions','locale']`（`connection` 现不承载数据，仅满足
-插件组合契约，代码注释已说明）。`src/transport.mjs` 与 `index.js` 由 Lead 实现，其路由注册单测已包含在
-全仓测试快照（§7）中；本任务 smoke 的 client→Host 路径用真实业务 handler 包一层 fake fetch，**没有**
-在真实 Host 中注册 `/api/context-mng` 路由（见 §6）。
+`client.js` / `ui/context-store.js` 与 `tests/client-contract.test.mjs` 已按上述契约更新。复审后（见
+`docs/implementation-review.md`）client 模块 `inject` 收窄为实际使用的 `['slots','layout','locale']`：数据走同源
+fetch，`useSessions` 由 slots 框架 standardProps 提供（rc.5 `dsh-cordis-client-runner` client 的 static
+`standardProps` 声明），因此不再等待未使用的 `connection`/`sessions` client service。`src/transport.mjs` 与
+`index.js` 由 Lead 实现，其路由注册单测已包含在全仓测试快照（§7）中；本任务 smoke 的 client→Host 路径用真实
+业务 handler 包一层 fake fetch，**没有**在真实 Host 中注册 `/api/context-mng` 路由（见 §6）。
 
 ## 6. 明确未验证（不得由本证据升级为系统通过）
 
@@ -138,7 +139,7 @@ Lead 在隔离 rc.5 host 上证实 `ctx.connection.rpc.handle(...)` 对 profile 
 ```powershell
 node --test --test-isolation=none tests/
 echo $LASTEXITCODE        # 0
-# tests 175 / pass 175 / fail 0 / skipped 0（2026-11-07 快照，含其它任务与 Lead 的 transport/service 测试）
+# tests 178 / pass 178 / fail 0 / skipped 0（2026-11-07 复审修复后快照，含其它任务与 Lead 的 transport/service 测试）
 ```
 
 该快照仅说明同一时刻全仓测试同绿；T3 的验收仍以 §2、§3 两条命令为准。

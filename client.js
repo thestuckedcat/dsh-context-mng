@@ -771,6 +771,12 @@ function createContextStore(options) {
         return;
       }
       const value = response.value;
+      if (value.scope_generation !== context.generation) {
+        stopPolling();
+        update({ status: 'stale', reason_code: 'STALE_SCOPE' });
+        writeGroupTexts(groupId, { loading: false, error: null });
+        return;
+      }
       if (value.status !== 'ok') {
         stopPolling();
         update(statusFromFailure(value));
@@ -1258,7 +1264,11 @@ function createContextPanel(React) {
       return () => store.setPanelActive(false);
     }, []);
     React.useEffect(() => {
-      if (currentSessionId !== null && currentSessionId !== undefined) store.selectSession(currentSessionId);
+      // A null current session is a real state change: clearing the store is
+      // what drops the previous session's groups/text/exports and stops its
+      // polling (design §6). Only waiting for non-null ids would leak the old
+      // session's data when the main session goes away.
+      store.selectSession(currentSessionId === null || currentSessionId === undefined ? null : currentSessionId);
     }, [currentSessionId]);
 
     const children = [
@@ -1315,14 +1325,17 @@ function createContextPanel(React) {
 
     return {
       name: 'dsh-context-mng',
-      inject: ['slots', 'layout', 'connection', 'sessions', 'locale'],
+      // Only the client services actually used by `apply` are injected. The
+      // data path is plain same-origin fetch (CTX-RPC-03) and the current
+      // session arrives through the slots framework's standard `useSessions`
+      // prop, so waiting on the `connection`/`sessions` services would only add
+      // a load-order dependency without being used.
+      inject: ['slots', 'layout', 'locale'],
       apply(ctx) {
         const store = contextStoreModule.createContextStore({
           // The data path is the verified rc.5 exact Fetch route (CTX-RPC-03).
           // Same-origin cookies authenticate the shared owner Peer; the Host
-          // route rejects any non-owner peer. `connection` stays in the
-          // declared inject list because the plugin composition contract
-          // requires it, but the RPC handler seam itself is unusable in rc.5.
+          // route rejects any non-owner peer.
           fetch: typeof fetch === 'function' ? function (input, init) { return fetch(input, init); } : undefined,
           document: typeof document === 'undefined' ? undefined : document,
         });

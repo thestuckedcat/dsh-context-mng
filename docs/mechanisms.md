@@ -92,14 +92,14 @@ surface 变化 → `stale/STALE_OBSERVATION`（客户端刷新）；取消/断�
 
 - 触发：用户显式点击导出；宿主从不自动导出。
 - 前置：binding 的 `export_root_refs` 包含 `output_ref`；observation/revision 匹配；报告 schema 严格校验。
-- 动作：root 绝对路径 + 目标路径包含性校验（拒绝越界/非普通文件/符号链接父或目标）→ 同目录临时文件→写入→fsync→close→rename→目录 fsync 尽力；已存在同内容 → saved 同 digest；不同内容 → conflict 不覆盖；wire 只回 root-relative 名称+digest。
+- 动作：root 绝对路径 + 目标路径包含性校验（拒绝越界/非普通文件/符号链接父或目标）→ 同目录临时文件→写入→fsync→close→rename→目录 fsync 尽力；`exported_at` 取 observation 的 `captured_at`（同一 observation/revision 不可变），使重复导出字节完全相同、命中 writer 的 saved 幂等；不同 revision 的 report_id 不同，永不覆盖；wire 只回 root-relative 名称+digest。
 - 失败恢复：写失败 → 固定 INTERNAL_FAILURE/EXPORT_CONFLICT，不自动重试；部分写不会留下正式文件名（临时文件隔离）。
 
 ### CTX-OBS-09 浏览器传输与 owner 门禁
 
 - 触发：client 调四端点。
-- 规则：`POST /api/context-mng/<endpoint>`；Host 共享 `/api` handler 先做 Host/Origin fence 与 cookie 认证（未认证 401），再对非 owner principal 403，然后才调用插件路由；请求体严格 schema（额外 caller/principal/grant 字段一律拒绝）。业务拒绝为 HTTP 200 + 固定 `status/reason_code`；`caller` 记录 Host owner 门禁结论（exact route 不传 peer），registry 仍是唯一范围权威。
-- 失败恢复：非 2xx/坏 JSON/坏 BusinessResponse → 客户端固定 `TRANSPORT_FAILURE`，不显示原 message/details；写操作（导出）不自动重发。
+- 规则：`POST /api/context-mng/<endpoint>`；Host 共享 `/api` handler 先做 Host/Origin fence 与 cookie 认证（未认证 401），再对非 owner principal 403，然后才调用插件路由；请求体严格 schema（额外 caller/principal/grant 字段一律拒绝）。exact route 以 rc.5 `requestBody:"streaming"` 注册（Host 不预缓冲），插件只读取 ≤64 KiB 并在超限时取消流；声明长度超限在读前拒绝。业务拒绝为 HTTP 200 + 固定 `status/reason_code`；`caller` 记录 Host owner 门禁结论（exact route 不传 peer），registry 仍是唯一范围权威。
+- 失败恢复：非 2xx/坏 JSON/坏 BusinessResponse/超限 body → 客户端固定 `TRANSPORT_FAILURE` 或 `LIMIT_EXCEEDED`，不显示原 message/details；写操作（导出）不自动重发。
 
 ### CTX-OBS-10 Client 视图 epoch、轮询与取消
 
@@ -157,9 +157,12 @@ surface 变化 → `stale/STALE_OBSERVATION`（客户端刷新）；取消/断�
 `evidence/task1-*.tap`（46 tests） | 分类/脱敏/估算/投影/未知/截断/去重摘要的纯核心行为 | 真实 Host 采样 |
 `evidence/task2-cache.tap`/`task2-capture.tap`（33 tests） | 有界缓存、去重、透明 stream、取消/迟到 usage、dispose | 完整 AgentLoop 单轮 |
 `evidence/task2-probe.json`（28 checks） | 用**实际安装 rc.5 字节**跑真实 Session/deriveMessages、cordis waterfall、真实 SessionStore+我们的 capture；pinned SHA256 全对 | 真实模型/网络/完整 Host 轮次 |
-`evidence/task3-tests.tap`（41）+ `task3-smoke.txt` | 导出原子/幂等/路径防护、client 模块契约、epoch/传输错误、面板状态、网络 0 尝试（Node API 级） | 真实 Chromium 页面与 CSP |
-`evidence/task4-full-suite.tap`（175） | 全仓库组件/合同回归 | Host/OS 级保证 |
-`evidence/task4-host-rpc.txt` | 隔离 rc.5 web Host 真实启动、cookie 认证、`/api/context-mng/*` 路由、BusinessResponse、伪造字段/未知 endpoint/未认证/未登记/无 live session 的拒绝路径 | Chromium 面板渲染与真实用户旅程 |
+`evidence/task3-tests.tap`（41）+ `task3-smoke.txt` | 导出原子/路径防护、client 模块契约、epoch/传输错误、面板状态、网络 0 尝试（Node API 级） | 真实 Chromium 页面与 CSP |
+`evidence/task4-service.tap`（14） | 服务层导出幂等：同一 observation/revision 用不同墙钟重复导出 → 同文件/同 digest、无 conflict | 跨进程重启后的幂等（report_id 稳定，但本地无 journal） |
+`evidence/task4-transport.tap`（11） | streaming route 的 64 KiB 硬上限：声明长度/chunked 超限、流错误、正常解析 | Host/OS 级内存测量 |
+`evidence/task4-full-suite.tap`（178） | 全仓库组件/合同回归（复审修复后） | Host/OS 级保证 |
+`evidence/task4-host-rpc.txt` | 隔离 rc.5 web Host 真实启动、cookie 认证、`/api/context-mng/*` 路由、BusinessResponse、伪造字段/未知 endpoint/未认证/未登记/无 live session 的拒绝路径，以及声明长度/chunked 超限 body 的 `LIMIT_EXCEEDED` | Chromium 面板渲染与真实用户旅程 |
+`docs/implementation-review.md` | 独立复审：无 Critical、2 Important 已修复并回归、3 Minor 已修复、残余未验证层 | 复审不能替代真实页面/Provider/OS 出口验收 |
 `docs/task2-evidence.md`、`docs/task3-evidence.md`、`docs/task4-evidence.md` | 命令、退出码、限制与未验证项 | — |
 
 **下一步最小验证（改进假设）**

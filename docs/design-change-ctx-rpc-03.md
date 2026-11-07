@@ -60,8 +60,9 @@ CTX-DESIGN-2 §5.1 依据 rc.5 `dsh-client-connection/lib/index.js` 源码行 72
 - `report.export`（未登记 output_ref）→ 200 `{"status":"denied","reason_code":"OUTPUT_REF_DENIED"}`
 - 未认证请求 → 401 `unauthorized`（Host 在插件之前拒绝）
 
-组件测试：`tests/transport.test.mjs` 8/8 通过（路由形状、直接 BusinessResponse、owner 门禁记录、
-非 owner peer 拒绝、错误 content-type/JSON/超限、异常固定失败、dispose、无绝对路径泄露）。
+组件测试：`tests/transport.test.mjs` 11/11 通过（路由形状、直接 BusinessResponse、owner 门禁记录、
+非 owner peer 拒绝、错误 content-type/JSON、声明长度/chunked 超限、流错误、异常固定失败、dispose、
+无绝对路径泄露）。
 
 ## 5. 未关闭缺口与回退
 
@@ -72,3 +73,19 @@ CTX-DESIGN-2 §5.1 依据 rc.5 `dsh-client-connection/lib/index.js` 源码行 72
   业务层与访问控制无需改动。
 - 回退方法：删除 `src/transport.mjs` 与 `index.js` 的 transport 注册，客户端改回 `ctx.connection.rpc.call`；
   registry、service、rpc、schema 与测试不受影响。
+
+## 6. 复审后补正（2026-11-07，CTX-REVIEW-1）
+
+独立复审（`docs/implementation-review.md`）指出：原 exact routes 以 `requestBody:"buffered"` 注册，
+请求体在插件检查前已由 Host 缓冲（默认上限 300 MiB），设计 §5.1 要求验证全局 body 上限、事后长度检查
+不能作为传输层分配证明。补正如下：
+
+- 四个 exact route 改为 `requestBody:"streaming"`；rc.5 `bridge()` 只有 `"buffered"` 才预缓冲，其余值使用
+  `Readable.toWeb(req)` 的流式 Request；
+- `src/transport.mjs` 新增 `readJsonBody(request, maxBytes)`：带 `content-length` 超限在读前拒绝；chunked/
+  流式 body 读到 64 KiB 即 `cancel()` 并返回固定 `LIMIT_EXCEEDED`；JSON 解析失败固定 `INVALID_REQUEST`；
+  rpc handler 的事后长度检查保留为纵深防御；
+- 隔离 rc.5 Host 重跑：声明 ≈70 KB 与 chunked ≈70 KB 两种请求均返回 200 + `LIMIT_EXCEEDED`，其余拒绝路径
+  不变（`evidence/task4-host-rpc.txt`）；`tests/transport.test.mjs` 11/11。
+
+该补正不改变请求/响应外壳、owner 门禁、registry 授权或错误码语义；回退时同时恢复 `requestBody` 与 reader。

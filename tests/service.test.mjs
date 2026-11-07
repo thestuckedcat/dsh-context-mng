@@ -2,10 +2,14 @@
 
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { mkdtempSync, readFileSync, readdirSync, rmSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 
 import { ContractError, REDACTION_POLICY_REVISION } from '../src/contracts.mjs';
 import { createAccessRegistry } from '../src/access.mjs';
 import { createContextService, pageText } from '../src/service.mjs';
+import { createReportWriter } from '../src/export.mjs';
 import {
   boundary,
   captureDouble,
@@ -26,7 +30,7 @@ const BASE = {
 };
 
 function makeService(overrides = {}) {
-  const access = createAccessRegistry({ registry: registry() });
+  const access = createAccessRegistry({ registry: overrides.registry ?? registry() });
   const store = overrides.store ?? memoryStore([]);
   const capture = overrides.capture ?? captureDouble();
   const reportWriter = overrides.reportWriter ?? reportWriterDouble();
@@ -36,7 +40,7 @@ function makeService(overrides = {}) {
     capture,
     reportWriter,
     policy: { redactionPolicyRevision: REDACTION_POLICY_REVISION },
-    clock: fixedClock(),
+    clock: overrides.clock ?? fixedClock(),
   });
   return { service, access, store, capture, reportWriter };
 }
@@ -219,4 +223,43 @@ test('service describe exposes registry/cache/policy facts only', () => {
   assert.equal(described.registry.bindings, 1);
   assert.equal(described.policy.redactionPolicyRevision, REDACTION_POLICY_REVISION);
   assert.equal(JSON.stringify(described).includes('C:/Users/synthetic'), false);
+});
+
+test('repeat export of one observation revision is byte-identical and saved (no conflict)', async () => {
+  const root = mkdtempSync(join(tmpdir(), 'ctxmng-export-idem-'));
+  try {
+    const entry = storeEntry({ revision: 2, observation: observation({ revision: 2 }) });
+    const syntheticRegistry = registry({
+      export_roots: [{ root_ref: 'reports', path: root }],
+      bindings: [{
+        context_ref: 'ctx-a',
+        session_ref: 'session-a',
+        scope: { scope_id: 'project-a', generation: 3, identity_digest: 'a'.repeat(64) },
+        read: true,
+        export_root_refs: ['reports'],
+        active: true,
+      }],
+    });
+    // Two different wall-clock instants: the report must still be byte-identical.
+    let tick = 0;
+    const service = makeService({
+      store: memoryStore([entry]),
+      registry: syntheticRegistry,
+      reportWriter: createReportWriter({ clock: () => new Date(1700000000000 + tick++) }),
+    }).service;
+    const first = await service.exportReport({ ...BASE, observationId: 'obs-fixture-1', outputRef: 'reports', expectedRevision: 2 });
+    const second = await service.exportReport({ ...BASE, observationId: 'obs-fixture-1', outputRef: 'reports', expectedRevision: 2 });
+    assert.equal(first.status, 'saved');
+    assert.equal(second.status, 'saved', 'a retry must not surface EXPORT_CONFLICT');
+    assert.equal(first.report_ref, second.report_ref);
+    assert.equal(first.digest, second.digest);
+    const names = readdirSync(root);
+    assert.equal(names.length, 1, 'idempotent retry must not create a second file');
+    const written = JSON.parse(readFileSync(join(root, names[0]), 'utf8'));
+    assert.match(written.report_id, /^ctx-report-[0-9a-f]+-r2$/);
+    assert.equal(written.report_id + '.json', second.report_ref);
+    assert.equal(written.exported_at, entry.observation.captured_at, 'exported_at is the immutable observation time');
+  } finally {
+    rmSync(root, { recursive: true, force: true });
+  }
 });

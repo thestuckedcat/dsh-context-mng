@@ -742,6 +742,12 @@ export function createContextStore(options) {
         return;
       }
       const value = response.value;
+      if (value.scope_generation !== context.generation) {
+        stopPolling();
+        update({ status: 'stale', reason_code: 'STALE_SCOPE' });
+        writeGroupTexts(groupId, { loading: false, error: null });
+        return;
+      }
       if (value.status !== 'ok') {
         stopPolling();
         update(statusFromFailure(value));

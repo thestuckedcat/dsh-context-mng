@@ -328,7 +328,11 @@ export function createContextPanel(React) {
       return () => store.setPanelActive(false);
     }, []);
     React.useEffect(() => {
-      if (currentSessionId !== null && currentSessionId !== undefined) store.selectSession(currentSessionId);
+      // A null current session is a real state change: clearing the store is
+      // what drops the previous session's groups/text/exports and stops its
+      // polling (design §6). Only waiting for non-null ids would leak the old
+      // session's data when the main session goes away.
+      store.selectSession(currentSessionId === null || currentSessionId === undefined ? null : currentSessionId);
     }, [currentSessionId]);
 
     const children = [

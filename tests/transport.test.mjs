@@ -4,7 +4,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 
 import { createRpcHandler } from '../src/rpc.mjs';
-import { API_BASE, API_ROUTE_PATHS, createContextFetchTransport } from '../src/transport.mjs';
+import { LIMITS } from '../src/contracts.mjs';
+import { API_BASE, API_ROUTE_PATHS, createContextFetchTransport, readJsonBody } from '../src/transport.mjs';
 
 const OWNER_PEER = Object.freeze({ id: 'peer-1', principal: Object.freeze({ kind: 'owner' }), signal: Object.freeze({ aborted: false }) });
 const API_PEER = Object.freeze({ id: 'peer-2', principal: Object.freeze({ kind: 'api' }), signal: Object.freeze({ aborted: false }) });
@@ -71,7 +72,9 @@ test('registers one exact POST route per business endpoint under /api', () => {
   assert.deepEqual([...connection.routes.keys()].sort(), Object.values(API_ROUTE_PATHS).sort());
   for (const route of connection.routes.values()) {
     assert.deepEqual(route.methods, ['POST']);
-    assert.equal(route.requestBody, 'buffered');
+    // Non-"buffered" is the rc.5 bridge's streaming branch: the Host does not
+    // buffer the body, so our bounded reader is the transport-level bound.
+    assert.equal(route.requestBody, 'streaming');
     assert.equal(typeof route.fetch, 'function');
     assert.equal(route.path.startsWith(`${API_BASE}/`), true);
   }
@@ -217,4 +220,82 @@ test('transport never exposes absolute paths in responses', async () => {
   assert.equal(body.status, 'ok');
   assert.equal(body.data.status, 'conflict');
   assert.equal(JSON.stringify(body).includes('C:/'), false);
+});
+
+test('streaming route body is read with a hard byte bound before parsing', async () => {
+  const { connection, service } = makeTransport();
+  const route = connection.routes.get(API_ROUTE_PATHS['context.list']);
+  const url = `http://127.0.0.1:1234${API_ROUTE_PATHS['context.list']}`;
+
+  // Chunked body without content-length: parsed normally, service reached.
+  const chunks = [
+    new TextEncoder().encode('{"schema_version":1,'),
+    new TextEncoder().encode('"operation_id":"op-chunk","view_epoch":1,"input":{}}'),
+  ];
+  const normalStream = new ReadableStream({
+    start(controller) {
+      for (const chunk of chunks) controller.enqueue(chunk);
+      controller.close();
+    },
+  });
+  const normal = new Request(url, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: normalStream,
+    duplex: 'half',
+  });
+  const okBody = await jsonOf(await route.fetch(normal));
+  assert.equal(okBody.status, 'ok');
+  assert.equal(okBody.operation_id, 'op-chunk');
+  assert.equal(service.calls.length, 1);
+
+  // Declared Content-Length above the limit is refused before any read.
+  const declared = await readJsonBody(
+    { headers: new Headers({ 'content-length': String(LIMITS.maxRequestJsonBytes + 1) }), body: null },
+    LIMITS.maxRequestJsonBytes,
+  );
+  assert.deepEqual(declared, { ok: false, reasonCode: 'LIMIT_EXCEEDED' });
+
+  // A chunked body above the limit is cut off, cancelled and refused.
+  let cancelled = false;
+  const oversizedStream = new ReadableStream({
+    start(controller) {
+      controller.enqueue(new Uint8Array(48 * 1024));
+      controller.enqueue(new Uint8Array(48 * 1024));
+    },
+    cancel() {
+      cancelled = true;
+    },
+  });
+  const oversized = new Request(url, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: oversizedStream,
+    duplex: 'half',
+  });
+  const oversizedBody = await jsonOf(await route.fetch(oversized));
+  assert.equal(oversizedBody.reason_code, 'LIMIT_EXCEEDED');
+  assert.equal(cancelled, true, 'over-limit stream must be cancelled');
+});
+
+test('malformed content-length and failing body streams are invalid requests', async () => {
+  const invalidLength = await readJsonBody(
+    { headers: new Headers({ 'content-length': '12abc' }), body: null },
+    LIMITS.maxRequestJsonBytes,
+  );
+  assert.deepEqual(invalidLength, { ok: false, reasonCode: 'INVALID_REQUEST' });
+
+  const brokenStream = new ReadableStream({
+    pull() {
+      throw new Error('stream failure');
+    },
+  });
+  const broken = await readJsonBody(
+    { headers: new Headers({}), body: brokenStream },
+    LIMITS.maxRequestJsonBytes,
+  );
+  assert.deepEqual(broken, { ok: false, reasonCode: 'INVALID_REQUEST' });
+
+  const noBody = await readJsonBody({ headers: new Headers({}), body: null }, LIMITS.maxRequestJsonBytes);
+  assert.deepEqual(noBody, { ok: false, reasonCode: 'INVALID_REQUEST' });
 });

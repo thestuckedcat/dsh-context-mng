@@ -21,7 +21,7 @@
  *    validation/authorization/error semantics of src/rpc.mjs are unchanged.
  */
 
-import { ContractError, jsonByteLength, responseForReason } from './contracts.mjs';
+import { ContractError, LIMITS, jsonByteLength, responseForReason } from './contracts.mjs';
 
 export const API_BASE = '/api/context-mng';
 
@@ -45,24 +45,29 @@ const INVALID_FALLBACK = Object.freeze({ operationId: 'invalid', viewEpoch: 0, s
  * }} deps
  * @returns {() => void} disposer
  */
-export function createContextFetchTransport({ connection, rpcHandler, logger }) {
+export function createContextFetchTransport({ connection, rpcHandler, logger, limits = LIMITS }) {
   const disposers = [];
   for (const [endpoint, path] of Object.entries(API_ROUTE_PATHS)) {
     const route = {
       path,
       methods: ['POST'],
-      requestBody: 'buffered',
+      // 'streaming' is an rc.5 bridge mode: the Host hands the route a streaming
+      // Request instead of buffering the whole body up to its 300 MiB default
+      // (dsh-client-connection `bridge`: only "buffered" is buffered; every
+      // other value uses Readable.toWeb(req)). Our bounded reader below is the
+      // actual allocation bound the design §5.1 asks to verify: at most
+      // `limits.maxRequestJsonBytes` is read, then the stream is cancelled.
+      requestBody: 'streaming',
       fetch: async (request, peer) => {
         const contentType = (request.headers.get('content-type') ?? '').split(';', 1)[0]?.trim().toLowerCase();
         if (contentType !== 'application/json') {
           return businessResponse(responseForReason(INVALID_FALLBACK));
         }
-        let payload;
-        try {
-          payload = await request.json();
-        } catch {
-          return businessResponse(responseForReason(INVALID_FALLBACK));
+        const body = await readJsonBody(request, limits.maxRequestJsonBytes);
+        if (!body.ok) {
+          return businessResponse(responseForReason({ ...INVALID_FALLBACK, reasonCode: body.reasonCode }));
         }
+        const payload = body.value;
         try {
           // rc.5 exact Fetch routes receive no peer object. The Host shared
           // handler has already enforced the owner gate (403 for every other
@@ -116,6 +121,66 @@ export function createContextFetchTransport({ connection, rpcHandler, logger }) 
 
 function businessResponse(value) {
   return Response.json(value, { headers: { 'cache-control': 'no-store' } });
+}
+
+/**
+ * Read and parse one JSON request body with a hard byte bound.
+ *
+ * The rc.5 exact Fetch route is registered as `requestBody: "streaming"`, so
+ * the Host never buffers the whole HTTP body for this route. This reader is
+ * therefore the transport-level allocation bound: it rejects a declared
+ * Content-Length above the limit before reading, and stops reading a chunked
+ * body as soon as it exceeds the limit. The RPC handler keeps its own
+ * post-parse JSON-size check as defense in depth.
+ *
+ * @param {Request} request
+ * @param {number} maxBytes
+ * @returns {Promise<{ok: true, value: unknown} | {ok: false, reasonCode: 'INVALID_REQUEST'|'LIMIT_EXCEEDED'}>}
+ */
+export async function readJsonBody(request, maxBytes) {
+  const declared = request.headers.get('content-length');
+  if (declared !== null) {
+    const normalized = declared.trim();
+    if (!/^[0-9]+$/.test(normalized)) return { ok: false, reasonCode: 'INVALID_REQUEST' };
+    if (Number(normalized) > maxBytes) return { ok: false, reasonCode: 'LIMIT_EXCEEDED' };
+  }
+  const body = request.body;
+  if (body === null || body === undefined || typeof body.getReader !== 'function') {
+    return { ok: false, reasonCode: 'INVALID_REQUEST' };
+  }
+  const reader = body.getReader();
+  const chunks = [];
+  let received = 0;
+  try {
+    for (;;) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      const chunk = value instanceof Uint8Array ? value : new Uint8Array(value);
+      received += chunk.byteLength;
+      if (received > maxBytes) {
+        try {
+          await reader.cancel();
+        } catch {
+          /* cancellation is best-effort */
+        }
+        return { ok: false, reasonCode: 'LIMIT_EXCEEDED' };
+      }
+      chunks.push(Buffer.from(chunk));
+    }
+  } catch {
+    return { ok: false, reasonCode: 'INVALID_REQUEST' };
+  }
+  let text;
+  try {
+    text = Buffer.concat(chunks).toString('utf8');
+  } catch {
+    return { ok: false, reasonCode: 'INVALID_REQUEST' };
+  }
+  try {
+    return { ok: true, value: JSON.parse(text) };
+  } catch {
+    return { ok: false, reasonCode: 'INVALID_REQUEST' };
+  }
 }
 
 /**

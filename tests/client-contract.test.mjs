@@ -585,7 +585,7 @@ test('factory is side-effect free and returns the declared plugin face', () => {
   assert.equal(fakeReact.calls.createElement, 0, 'factory must not create elements');
   assert.equal(typeof plugin, 'object');
   assert.equal(plugin.name, 'dsh-context-mng');
-  assert.deepEqual(plain(plugin.inject), ['slots', 'layout', 'connection', 'sessions', 'locale']);
+  assert.deepEqual(plain(plugin.inject), ['slots', 'layout', 'locale'], 'only client services the apply path actually uses');
   assert.equal(typeof plugin.apply, 'function');
   assert.equal(typeof plugin.apply.constructor, 'function');
 });

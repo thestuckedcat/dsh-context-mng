@@ -171,7 +171,13 @@ export function createContextService({
       schema_version: SCHEMA_VERSION,
       capability: CAPABILITY,
       report_id: reportId,
-      exported_at: clock().toISOString(),
+      // A report is an immutable derivation of one observation revision: using
+      // the observation capture time (not wall-clock export time) keeps the
+      // bytes identical across retries, so the writer's "same report_id + same
+      // content => saved" idempotency contract is actually reachable through
+      // this service. A different observation/revision gets a different
+      // report_id and therefore can never overwrite this file.
+      exported_at: entry.observation.captured_at,
       observation: entry.observation,
       redaction_policy_revision: policy.redactionPolicyRevision,
     };

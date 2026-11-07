@@ -4,7 +4,7 @@
 
 2026-11-06设计入口：[software-design.md](docs/software-design.md)。用户已明确首版只读观察，手动压缩后续增量。编码接口、schema、模块职责、Host兼容后备和需求ID映射以该设计为依据；本文件旧任务保留为分阶段索引。
 
-**2026-11-07 实施状态**：只读首版已按 CTX-DESIGN-2/3/4 实现，并通过 175 项组件/合同测试、28 项已安装 rc.5 字节探针、隔离 rc.5 Host 的加载/认证/路由实测；交付已同步 https://github.com/thestuckedcat/dsh-context-mng 。维护（Task 3）仍未实现，`maintenance.enabled` 强制 false。证据与未验证层见 `docs/task4-evidence.md`、`docs/mechanisms.md`。
+**2026-11-07 实施状态**：只读首版已按 CTX-DESIGN-2/3/4 实现，并通过 178 项组件/合同测试、28 项已安装 rc.5 字节探针、隔离 rc.5 Host 的加载/认证/路由实测（含流式 body 硬上限）；独立复审无 Critical，2 Important/3 Minor 已修复并回归（`docs/implementation-review.md`）。交付已同步 https://github.com/thestuckedcat/dsh-context-mng 。维护（Task 3）仍未实现，`maintenance.enabled` 强制 false。证据与未验证层见 `docs/task4-evidence.md`、`docs/mechanisms.md`。
 
 **Goal:** 本地查看模型上下文的组成、来源和演进，并按需提供可预览的手动压缩（维护后置）。
 **Architecture:** 原生 DSH Host/client plugin 读取投影并提供面板；可选压缩是另一个有明确写权限的子模块。长期记忆归05，不由本项隐式导入。
@@ -43,7 +43,7 @@
 
 - [x] 写 CTX-02：只读模式无 prompt 改动；重复挂载/多视图关闭/会话切换订阅清理；错误/导出无外发。先写失败用例再实现（组件测试全部通过）。
 - [x] 对候选 Host 投影与 UI 做薄适配；从配置层拒绝维护写路径；只在本地面板提供非秘密信息。
-- [x] 运行单测（175/175）、fixture smoke（9/9，出站 0）与真实安装字节探针（28/28）；隔离 rc.5 Host 加载/认证/路由拒绝路径通过（`evidence/task4-host-rpc.txt`）。此时只读 plugin 已可独立交付，不依赖 03/05。
+- [x] 运行单测（178/178）、fixture smoke（9/9，出站 0）与真实安装字节探针（28/28）；隔离 rc.5 Host 加载/认证/路由拒绝路径通过（`evidence/task4-host-rpc.txt`，含流式 body 超限）；独立复审 Important/Minor 已修复并回归（`docs/implementation-review.md`）。此时只读 plugin 已可独立交付，不依赖 03/05。
 
 ## Task 3：可选受控压缩（CTX-07、CTX-08、CTX-09）— 后置、未实现
 

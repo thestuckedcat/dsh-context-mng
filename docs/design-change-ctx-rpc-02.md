@@ -1,6 +1,6 @@
 # 设计变更单 CTX-RPC-02：实现期补正（context.list 与 RpcResult 落地）
 
-版本：CTX-CHANGE-1；日期：2026-11-07；状态：已实现并自测（隔离宿主 RPC 加载待验）；影响 ID：CTX-02、CTX-04、CTX-06。
+版本：CTX-CHANGE-1；日期：2026-11-07；状态：已实现并自测；隔离宿主加载/认证/RPC 已由 CTX-RPC-03 传输实测覆盖，下文第 2 节的 RpcResult 外壳随传输替换不再使用（业务响应语义保留）；影响 ID：CTX-02、CTX-04、CTX-06。
 
 ## 1. 背景
 

@@ -94,6 +94,7 @@ node tools/probe-host.mjs --asar "E:/dsh/resources/app.asar"  # rc.5 安装字�
 - [实施路线与来源](docs/implementation-route.md)：开工说明、采用级别、隔离/出口边界与首个验收动作。
 - [兼容性与已核接口](docs/compatibility.md)：rc.5 实际字节、哈希与接缝事实。
 - [机制说明](docs/mechanisms.md)：场景→触发→判断→状态→证据→失败恢复，供后续 skill 改进引用。
+- [实现独立复审](docs/implementation-review.md)：无 Critical；2 Important/3 Minor 已修复并回归，列残余未验证层。
 - [独立开发计划](PLAN.md)：分阶段任务索引与原始验收口径。
 - [共同开发约束](../docs/development-contract.md)、[形态决策](../docs/capability-forms.md)、[详细设计](../docs/ecosystem-learning-design.md)。
 

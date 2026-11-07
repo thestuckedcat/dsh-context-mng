@@ -39,7 +39,7 @@
 
 来源：rc.5 `dsh-client-connection/lib/index.js`（`lib/types/rpc-host.js` 区段，约 686—970 行）。
 
-- `ctx.connection.rpc.handle(channel, handler)`；`channel` 必须匹配 `^/[A-Za-z0-9._~-]+$` 且不是保留 `/api`。注册绑定当前 fiber（`owner.effect(... webServer.register ...)`），fiber 卸载即注销。
+- `ctx.connection.rpc.handle(channel, handler)`；`channel` 必须匹配 `^/[A-Za-z0-9._~-]+$` 且不是保留 `/api`。源码看起来把注册绑定到 `owner.effect(...)`，但实测 `owner` 是 connection 服务自身的 context（未 inject `webServer`），调用方真正声明 webServer inject 也无法改变，故该 seam 不可用（见上方 CTX-RPC-03 更正）。
 - 端点请求：`POST {channel}/{endpoint}`，`content-type: application/json`，body 为 `{type:"client-request", rpcId, method, payload}`；`endpoint` 段匹配 `[A-Za-z0-9_$.-]+`；`method` 必须等于 URL 的 endpoint。
 - 处理器签名：`handler(endpoint, payload, request.signal, peer)`。`peer` 由 Host 认证/信任门禁（`admit`）产生；浏览器共享一个 `{principal:{kind:"owner"}}` Peer。
 - 处理器返回值**必须是 RpcResult**：`{ok:true, value}` 或 `{ok:false, error:{code,message,details}}`；成功值不强制校验，由调用方校验。
@@ -50,9 +50,23 @@
 
 ```text
 request  = {schema_version:1, operation_id, context_ref, expected_scope_generation, view_epoch, input}
-RpcResult.value = BusinessResponse
 BusinessResponse = {schema_version:1, operation_id, view_epoch, scope_generation, status, data|reason_code}
 ```
+
+### 2.1 Exact Fetch route 的请求体语义（复审后补核）
+
+来源：rc.5 `dsh-client-connection/lib/index.js` `bridge()` 与 `createSharedFetchHandler()`。
+
+- route 的 `requestBody` 只为 `"buffered"` 时 Host 才把 body 读满并构造带 Buffer body 的 `Request`；**任何其他值**
+  都会走 `new Request(url,{body: Readable.toWeb(req),duplex:"half"})` 的 streaming 分支，不预先缓冲。
+- buffered 分支的全局上限默认 `maxRequestBodyBytes = 300 MiB`（`DEFAULT_MAX_REQUEST_BODY_BYTES`）；
+  未显式验证前不能把 handler 内的事后长度检查当作传输层分配上限（设计 §5.1）。
+- 本插件四个 exact route 显式注册 `requestBody: "streaming"`，并在 `src/transport.mjs` 的 `readJsonBody()`
+  实现真正的硬上限：`content-length` 超限在读前拒绝；chunked/流式 body 读到
+  `LIMITS.maxRequestJsonBytes`（64 KiB）即取消并返回固定 `LIMIT_EXCEEDED`；RPC handler 的事后 JSON 长度检查
+  保留为纵深防御。`tests/transport.test.mjs` 覆盖声明长度、chunked 超限、流错误与正常解析。
+- 未执行：真实 Chromium 同源 fetch 的 CSP `connect-src` 与完整页面旅程；隔离 Host 的流式超限 HTTP 证据
+  记录在 `docs/task4-evidence.md`（若本次未重跑则明确标注）。
 
 ## 3. Session（只读观察接缝）
 
