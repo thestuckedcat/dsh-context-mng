@@ -7,9 +7,9 @@
 | 项 | 值 |
 |---|---|
 | 已安装 Harness | 0.2.1-rc.5（app.asar SHA256 `e1b6f25f…c6915`，与设计 pin 一致） |
-| 测试运行时 | Node **v24.18.1**（`C:\Users\admin\.dsh\electron\electron.exe` + `ELECTRON_RUN_AS_NODE=1`，Electron 43.3.0）与 Node v26.13.0 双跑 |
+| 测试运行时 | Node **v24.18.1**（`<DSH_HOME>\electron\electron.exe` + `ELECTRON_RUN_AS_NODE=1`，Electron 43.3.0）与 Node v26.13.0 双跑 |
 | 隔离 Host | 从 app.asar 只读抽取的 rc.5 运行时 + 临时 `DSH_HOME`（Web/Headless profile），未修改用户 desktop/web profile |
-| 真实 Provider | 在 `C:\Users\admin\.dsh`（原凭据库，**未复制/未输出任何密钥**）新建一次性测试 profile `07real`，经真实 web API 发 2 次极小合成请求（限 3 次内） |
+| 真实 Provider | 在 `<real DSH_HOME>`（原凭据库，**未复制/未输出任何密钥**）新建一次性测试 profile `07real`，经真实 web API 发 2 次极小合成请求（限 3 次内） |
 | 浏览器 | Google Chrome 156.0.8078.80，headless + DevTools Protocol（页面级真实渲染，不是 jsdom） |
 
 ## 1. G0 来源与范围 ✔

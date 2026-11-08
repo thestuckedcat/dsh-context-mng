@@ -4,7 +4,7 @@
 OS 级（包捕获或防火墙）外发认证，而不仅是 Node API monkeypatch 或浏览器网络面板。
 
 身份与权限：
-- 当前 Windows 登录用户：STUCKEDCAT-4090\admin
+- 当前 Windows 登录用户：<local-user>（标准用户令牌）
 - 进程令牌完整性：Medium；WindowsPrincipal.IsInRole(Administrator) = False（未提权）
 - 审批提示在本会话被禁用，无法请求 UAC/提权；不改动系统防火墙策略。
 
