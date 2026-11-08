@@ -50,6 +50,8 @@
 
 ## 4. 复审与实现共同声明的未验证层
 
+> 注：本节是**复审当时**的未验证快照。复审后已补齐的门禁（Node 24、完整 AgentLoop/agent-pre-step、真实 Chromium 页面、真实已注册 Provider、安装/卸载）见 [acceptance-gates](acceptance-gates.md) 与 `evidence/task5-*`；OS/Electron 级出口与真实面板绑定数据读数仍未执行。
+
 - 真实 Chromium 页面旅程、CSP `connect-src`、slot 渲染、locale/键盘、切会话/暂停/关闭的用户旅程未执行。
 - 完整 Host 上的 `observation.get` ok 采样路径（无真实 live session/模型）未执行，由安装字节探针与组件测试分层覆盖。
 - 真实 Provider 的 usage chunk 语义、真实模型请求未执行；`wire_verified=false`。
@@ -59,4 +61,4 @@
 
 ## 5. 复审结论与后续
 
-复审认为：无 Critical 安全/设计违背；2 个 Important 属可编码性/设计准则问题而非越权，修复后组件测试与隔离 Host 回归通过。后续若改动 transport/service/access/schema 或维护写路径，须重新复审受影响合同，不得沿用本记录认证新提交。真实 Chromium/Provider 验收仍是未执行门禁。
+复审认为：无 Critical 安全/设计违背；2 个 Important 属可编码性/设计准则问题而非越权，修复后组件测试与隔离 Host 回归通过。后续若改动 transport/service/access/schema 或维护写路径，须重新复审受影响合同，不得沿用本记录认证新提交。复审后真实 Chromium/Provider/Node24/AgentLoop/安装卸载门禁已执行（见 `acceptance-gates.md`）；OS 级出口与真实面板绑定读数仍未执行。

@@ -1,0 +1,36 @@
+07 context-mng OS/Electron 级出口认证尝试（2026-11-08）
+
+目标：按设计 §9 / live-installation-plan 的“真实出口验收”要求，对插件/宿主/Chromium 做
+OS 级（包捕获或防火墙）外发认证，而不仅是 Node API monkeypatch 或浏览器网络面板。
+
+身份与权限：
+- 当前 Windows 登录用户：STUCKEDCAT-4090\admin
+- 进程令牌完整性：Medium；WindowsPrincipal.IsInRole(Administrator) = False（未提权）
+- 审批提示在本会话被禁用，无法请求 UAC/提权；不改动系统防火墙策略。
+
+尝试 1：pktmon start --capture
+- 命令：pktmon start --capture
+- exit=5
+- 输出：PktMon.exe : 无法与 PktMon 驱动程序通信。拒绝访问。
+  （PktMon packet capture requires elevation / driver access.）
+
+尝试 2：netsh trace start capture=yes
+- 命令：netsh trace start capture=yes
+- exit=1
+- 输出：The requested operation requires elevation (Run as administrator).
+
+结论：本机当前会话不具备包捕获/防火墙审计所需的提权能力，OS/Electron 级出口认证 **BLOCKED**。
+不得用其他层证据声称“OS 级无外发已认证”。
+
+已具备的替代证据（层级不同、不能等价替代）：
+1. Node API guard：observe-smoke --network-evidence 对 fetch/WebSocket/XMLHttpRequest/EventSource/
+   node:net/http/https/dns 安装守卫，插件模块图出站尝试 = 0（evidence/task3-smoke.txt）。
+2. 真实 Chromium（CDP Network）：页面全部请求同源；无失败、无 CSP 违规、外部请求 = 0；
+   在 Chrome --host-resolver-rules="MAP * ~NOTFOUND, EXCLUDE 127.0.0.1" 下 13/13 检查仍通过
+   （evidence/task5-chromium.json、task5-chromium-blocked.json）。
+3. 真实 Provider Host：仅访问登记模型 API（stderr: [llm-deepseek-api-key] model listing from
+   https://api.deepseek.com/models），无其他外发观测（evidence/task5-real-provider.json 与 host stderr）。
+4. 源码静态扫描：src/index.js 无 fetch/http/child_process；client.js 仅同源 /api/context-mng fetch。
+
+后续补齐条件：需要在管理员权限下用 pktmon/netsh/ETW 捕获一次隔离 Host + Chrome 全程，
+并对插件、Host、Chromium、子进程做目的地址白名单比对；或由宿主平台提供签名的出口审计日志。

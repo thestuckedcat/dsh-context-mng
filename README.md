@@ -1,10 +1,10 @@
 # 07 · 上下文观察与受控维护（只读首版实现）
 
-状态：**只读观察已实现并自测；手动压缩（T5）按设计后置、未实现**。更新：2026-11-07。主形态为 DeepSeek Harness Host/client plugin；本目录同时是该插件仓库（`dsh-context-mng`）。
+状态：**只读观察已实现并自测；G0–G4 验收门禁已补齐（OS/Electron 级出口认证平台阻断、真实面板绑定读数未执行）；手动压缩（T5）按设计后置、未实现**。更新：2026-11-08。主形态为 DeepSeek Harness Host/client plugin；本目录同时是该插件仓库（`dsh-context-mng`）。
 
 本插件在原生“上下文”面板里回答“这个会话目前保留了哪些内容、来源是什么、估算用量与 provider 实报各是多少”，并且**不修改**会话、prompt 或模型请求。观察、维护、05 长期记忆是三个独立概念；面板显示隐藏不代表模型遗忘。
 
-实施路线、来源与边界见[实施路线](docs/implementation-route.md)；Host 兼容性以[兼容性说明](docs/compatibility.md)的实际字节为准；机制说明见[机制说明](docs/mechanisms.md)。
+实施路线、来源与边界见[实施路线](docs/implementation-route.md)；Host 兼容性以[兼容性说明](docs/compatibility.md)的实际字节为准；机制说明见[机制说明](docs/mechanisms.md)；验收门禁对照见[验收门禁补齐记录](docs/acceptance-gates.md)。
 
 ## 首版范围
 
@@ -72,13 +72,15 @@
 ## 自测
 
 ```powershell
-node --test tests/                        # 组件/合同测试（无网络、无真实模型）
-node tools/context-report.mjs --fixture   # 双合成会话只读报告
-node tools/observe-smoke.mjs --fixture    # 缓存/切会话/取消/导出 smoke
-node tools/probe-host.mjs --asar "E:/dsh/resources/app.asar"  # rc.5 安装字节探针
+node --test --test-isolation=none tests/   # 178 组件/合同测试（Node 26；默认 node --test 在本机沙箱受 spawn 限制）
+node tools/context-report.mjs --fixture    # 双合成会话只读报告
+node tools/observe-smoke.mjs --fixture --network-evidence   # 缓存/切会话/取消/导出 + 出站 0
+node tools/probe-host.mjs --asar "E:/dsh/resources/app.asar"  # rc.5 安装字节探针（28 checks）
 ```
 
-证据目录：`evidence/`（TAP、摘要、命令与限制）。完整 Chromium 面板旅程与真实出口验收未执行时会在证据中如实标注，不以组件测试代替。
+门禁级验证（隔离 Host、真实 Chromium、真实已注册 Provider、安装/卸载、Node 24）见
+[docs/acceptance-gates.md](docs/acceptance-gates.md) 与 `evidence/task5-*`；其中 OS/Electron 级包捕获出口认证
+因当前会话未提权被平台阻断，真实面板绑定数据读数一致性未执行——均如实标注，不以组件测试替代。
 
 ## 安全边界
 
@@ -93,6 +95,7 @@ node tools/probe-host.mjs --asar "E:/dsh/resources/app.asar"  # rc.5 安装字�
 - [编码级软件设计](docs/software-design.md)：首版只读观察、手动压缩后续增量；含 schema、Host 接缝、状态和需求变更地图。
 - [实施路线与来源](docs/implementation-route.md)：开工说明、采用级别、隔离/出口边界与首个验收动作。
 - [兼容性与已核接口](docs/compatibility.md)：rc.5 实际字节、哈希与接缝事实。
+- [验收门禁补齐记录](docs/acceptance-gates.md)：G0–G5 对照、真实 AgentLoop/Chromium/Provider/安装卸载证据与阻断项。
 - [机制说明](docs/mechanisms.md)：场景→触发→判断→状态→证据→失败恢复，供后续 skill 改进引用。
 - [实现独立复审](docs/implementation-review.md)：无 Critical；2 Important/3 Minor 已修复并回归，列残余未验证层。
 - [独立开发计划](PLAN.md)：分阶段任务索引与原始验收口径。

@@ -4,7 +4,7 @@
 
 2026-11-06设计入口：[software-design.md](docs/software-design.md)。用户已明确首版只读观察，手动压缩后续增量。编码接口、schema、模块职责、Host兼容后备和需求ID映射以该设计为依据；本文件旧任务保留为分阶段索引。
 
-**2026-11-07 实施状态**：只读首版已按 CTX-DESIGN-2/3/4 实现，并通过 178 项组件/合同测试、28 项已安装 rc.5 字节探针、隔离 rc.5 Host 的加载/认证/路由实测（含流式 body 硬上限）；独立复审无 Critical，2 Important/3 Minor 已修复并回归（`docs/implementation-review.md`）。交付已同步 https://github.com/thestuckedcat/dsh-context-mng 。维护（Task 3）仍未实现，`maintenance.enabled` 强制 false。证据与未验证层见 `docs/task4-evidence.md`、`docs/mechanisms.md`。
+**2026-11-08 实施状态**：只读首版已按 CTX-DESIGN-2/3/4 实现，并通过 178 项组件/合同测试（Node 26 与 **Node 24.18.1** 双跑）、28 项已安装 rc.5 字节探针、隔离 rc.5 Host 的加载/认证/路由实测（含流式 body 硬上限）；独立复审无 Critical，2 Important/3 Minor 已修复并回归（`docs/implementation-review.md`）。验收门禁 G0–G4 已补齐：完整 Headless AgentLoop + 真实 `agent/pre-step`/`llm/stream`、真实 Chromium 页面（含外部 DNS 全阻断）、真实已注册 Provider 合成请求（usage 437/2/8704）、宿主 `dsh plugin add/remove` 安装卸载；OS/Electron 级包捕获出口认证因当前会话未提权被平台阻断，真实面板绑定数据读数未执行（`docs/acceptance-gates.md`）。交付已同步 https://github.com/thestuckedcat/dsh-context-mng 。维护（Task 3）仍未实现，`maintenance.enabled` 强制 false。
 
 **Goal:** 本地查看模型上下文的组成、来源和演进，并按需提供可预览的手动压缩（维护后置）。
 **Architecture:** 原生 DSH Host/client plugin 读取投影并提供面板；可选压缩是另一个有明确写权限的子模块。长期记忆归05，不由本项隐式导入。

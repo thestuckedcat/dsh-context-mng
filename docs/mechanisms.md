@@ -162,13 +162,20 @@ surface 变化 → `stale/STALE_OBSERVATION`（客户端刷新）；取消/断�
 `evidence/task4-transport.tap`（11） | streaming route 的 64 KiB 硬上限：声明长度/chunked 超限、流错误、正常解析 | Host/OS 级内存测量 |
 `evidence/task4-full-suite.tap`（178） | 全仓库组件/合同回归（复审修复后） | Host/OS 级保证 |
 `evidence/task4-host-rpc.txt` | 隔离 rc.5 web Host 真实启动、cookie 认证、`/api/context-mng/*` 路由、BusinessResponse、伪造字段/未知 endpoint/未认证/未登记/无 live session 的拒绝路径，以及声明长度/chunked 超限 body 的 `LIMIT_EXCEEDED` | Chromium 面板渲染与真实用户旅程 |
+`evidence/task5-node24.tap` | Node 24.18.1（Electron-as-Node）下 12 文件 **178/178** 通过，覆盖设计 Node≥24.9 范围 | 完整 Node 24 GUI |
+`evidence/task5-agentloop.out` + `task5-agentloop-observations.jsonl` | 完整 rc.5 Headless Host + 真实 AgentLoop 回合：真实 `agent/pre-step` 命中、真实 `llm/stream` waterfall、插件捕获 usage 37/2/cached5 与 7 groups；模型为脚本化 fake adapter，无网络/凭据 | 真实模型、真实 Provider 语义 |
+`evidence/task5-chromium.json`/`task5-chromium-blocked.json` + `task5-panel.png` | 真实 Chrome 页面 13 项：client bundle 入 boot graph、侧栏入口、面板渲染/unbound、同源 fetch、关闭、无外部请求/CSP/失败；外部 DNS 全阻断下仍 13/13 | 面板绑定 observation 的真实读数一致性 |
+`evidence/task5-real-provider.json` | 真实已注册 Provider（deepseek-official/deepseek-flash）合成会话：provider usage 437 input/2 output/8704 cached，is_final=true；插件估算 36742 bytes、6 groups、wire_verified=false；2 次真实请求内 | 用户现有 profile 安装、UI 与 RPC 数值逐项对比 |
+`evidence/task5-install-uninstall.txt` + `task5-os-egress-blocked.txt` | 宿主 `dsh plugin add/remove` 安装→路由 200、卸载→路由 404；OS 级包捕获因未提权被拒绝（pktmon/netsh） | OS 级出口认证（BLOCKED）、用户 profile 安装 |
+`docs/acceptance-gates.md` | G0–G5 对照、未验证/阻断项 | 不能替代未执行的 OS 出口与真实面板绑定读数 |
 `docs/implementation-review.md` | 独立复审：无 Critical、2 Important 已修复并回归、3 Minor 已修复、残余未验证层 | 复审不能替代真实页面/Provider/OS 出口验收 |
 `docs/task2-evidence.md`、`docs/task3-evidence.md`、`docs/task4-evidence.md` | 命令、退出码、限制与未验证项 | — |
 
 **下一步最小验证（改进假设）**
 
-1. 在真实 Chromium（现有 Harness Web UI）加载 client bundle，验证 main slot 注册、owner gate 下的真实 fetch/CSP `connect-src`、暂停/切会话/关闭旅程；最小反例：CSP 拦截导致 TRANSPORT_FAILURE 时面板是否正确显示固定错误。
-2. 用真实已注册 Provider 的合成会话跑一次 `llm/stream` 观测，对比 provider usage 与 UI 实报、确认 wire_verified=false 标注不被误读（不采集用户原会话）。
-3. Host 完整 AgentLoop 单轮的 `agent/pre-step` 真实语义（当前仅合成 waterfall）；最小反例：pre-step 决定 reject 时插件不得采样/阻塞。
+1. **OS/Electron 级出口认证**：当前会话未提权（pktmon/netsh 拒绝），需管理员权限下对隔离 Host + Chrome 全程做包捕获/白名单比对，或使用宿主签名出口审计；不得以 Node API 守卫/浏览器网络面板替代。
+2. **真实面板绑定数据读数一致性**：在真实 Chromium 中把已捕获 observation（含 provider usage）渲染进面板，并与 `/api/context-mng/observation.get` 的数值逐项对比；当前真实页面只验证了 unbound/路由/CSP。
+3. 用真实已注册 Provider 的合成会话再跑一次 UI 全旅程（打开→阶段切换→导出），确认 provider usage 与面板显示、`wire_verified=false` 标注不被误读（不采集用户原会话；模型请求仍限 3 次/次内）。
 4. 升级 Harness 后重核 `rpc.handle` 是否修复；若修复可回退 CTX-RPC-01 形态并重跑 host-rpc 证据。
-5. `unpriced_modalities` 的 UI 解释与 locale 字段标签补充（当前部分枚举按机器 token 展示）。
+5. 维护（T5）在共享运行租约/flush 证据齐备后另起增量；在那之前保持 disabled。
+6. `unpriced_modalities` 的 UI 解释与 locale 字段标签补充（当前部分枚举按机器 token 展示）。

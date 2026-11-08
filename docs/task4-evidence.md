@@ -79,3 +79,8 @@
 ## 6. 结论
 
 只读首版在**组件/合同层**与**实际安装库层**通过，并在**隔离完整 rc.5 Host 的加载/认证/路由/拒绝路径（含流式 body 上限）**上通过；独立复审的 Critical/Important 项均有修复与回归。真实 Chromium 用户旅程与真实 Provider 请求未执行，不得声称完整产品验收。维护按设计保持后置。
+## 7. 后续验收门禁补齐（2026-11-08）
+
+Node 24、完整 Headless AgentLoop/agent-pre-step、真实 Chromium 页面（含外部 DNS 阻断）、真实已注册 Provider、
+宿主安装/卸载已在后续轮次实际执行，证据与未执行项见 [验收门禁补齐记录](acceptance-gates.md) 与 `evidence/task5-*`。
+OS/Electron 级包捕获出口认证因当前会话未提权被平台阻断；真实面板绑定数据读数未执行。

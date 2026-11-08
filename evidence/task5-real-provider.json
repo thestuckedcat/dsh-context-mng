@@ -1,0 +1,215 @@
+{
+  "ok": true,
+  "dshHome": "<real-DSH_HOME>",
+  "workspace": "<temp-workspace>\\real-workspace",
+  "sessionId": "session-8f1b2c3d-4e5f-4a6b-9c7d-8e9f0a1b2c3d",
+  "steps": [
+    {
+      "name": "host_boot",
+      "ms": 2176
+    },
+    {
+      "name": "cookie_auth",
+      "http": 303
+    },
+    {
+      "name": "session_create",
+      "ms": 42,
+      "value": {
+        "sessionId": "session-8f1b2c3d-4e5f-4a6b-9c7d-8e9f0a1b2c3d",
+        "agentPreset": "standard"
+      }
+    },
+    {
+      "name": "session_prompt_accepted",
+      "ms": 25,
+      "requestId": "req-0fece0a9-c113-408a-9782-66297ab99cd4",
+      "value": {
+        "accepted": true
+      }
+    },
+    {
+      "name": "observation_captured",
+      "ms": 1021,
+      "stage": "llm_waterfall",
+      "fidelity": "request_observed",
+      "wire_verified": false,
+      "reported_usage": {
+        "request_ref": "ctx-req-1-session-8f1b2c3d-4e5f-4a6b-9c7d-8e9f0a1b2c3d-g1",
+        "input_tokens": 437,
+        "output_tokens": 2,
+        "cached_input_tokens": 8704,
+        "source": "provider_usage_chunk",
+        "is_final": true
+      },
+      "groups": 6,
+      "estimate": {
+        "method": "utf8_bytes_estimate_v1",
+        "tokenizer_ref": null,
+        "tokens": 36742,
+        "complete": true,
+        "unpriced_modalities": []
+      },
+      "route_revision": "route:deepseek-official/deepseek-flash",
+      "observed_digest": "cac9f69c5fd454c6079d128b19fc12b66185daab029449ada8be834e1b9fa507"
+    },
+    {
+      "name": "session_list",
+      "found": false,
+      "row": null
+    }
+  ],
+  "errors": [],
+  "observation": {
+    "schema_version": 1,
+    "observation_id": "ctx-obs-8a5ef221718f6e4805a5e63cbf1682408f297e03",
+    "revision": 3,
+    "boundary": {
+      "session_ref": "session-8f1b2c3d-4e5f-4a6b-9c7d-8e9f0a1b2c3d",
+      "scope": {
+        "scope_id": "real-provider-gate",
+        "generation": 1,
+        "identity_digest": "b2c3d4e5f60718293a4b5c6d7e8f9012345678abcdef0123456789abcdef0123"
+      },
+      "last_event_seq": 14,
+      "surface_generation": 0,
+      "route_revision": "route:deepseek-official/deepseek-flash",
+      "observation_epoch": 0
+    },
+    "captured_at": "2026-11-08T07:20:48.494Z",
+    "capture_stage": "llm_waterfall",
+    "fidelity": "request_observed",
+    "request_ref": "ctx-req-1-session-8f1b2c3d-4e5f-4a6b-9c7d-8e9f0a1b2c3d-g1",
+    "provider_ref": "deepseek-official",
+    "model_ref": "deepseek-flash",
+    "observed_digest": "cac9f69c5fd454c6079d128b19fc12b66185daab029449ada8be834e1b9fa507",
+    "wire_verified": false,
+    "groups": [
+      {
+        "group_id": "system|system-prompt|",
+        "category": "system",
+        "source_ref": null,
+        "source_kind": "system-prompt",
+        "message_refs": [
+          "01268de8-37df-490c-8ed3-b5d2f90bf345"
+        ],
+        "characters": 5775,
+        "bytes": 5795,
+        "estimated_tokens": 5795,
+        "certainty": "identified",
+        "preview": "You are an AI agent powered by DeepSeek Harness.\n\nYou are a coding agent powered by the deepseek-flash model.\n\nTokens prefixed with @ are paths the user explicitly referenced. Relative paths resolve from the workspace root; absolute paths identify files or directories on the host. A trailing slash marks a directory: list it when its contents matter. Anything else is a file: use the read tool when its contents are needed, and do not claim to have inspected it before reading. @\"...\" quotes a path containing s",
+        "truncated": false,
+        "redaction_count": 0
+      },
+      {
+        "group_id": "developer|runtime-context|",
+        "category": "developer",
+        "source_ref": null,
+        "source_kind": "runtime-context",
+        "message_refs": [
+          "9d87619e-1ff0-4181-ab2e-69be3d967fa4"
+        ],
+        "characters": 796,
+        "bytes": 796,
+        "estimated_tokens": 796,
+        "certainty": "identified",
+        "preview": "Current runtime context. This snapshot supersedes earlier runtime-context snapshots.\n\nCurrent working directory: \"C:\\\\Users\\\\admin\\\\AppData\\\\Local\\\\Temp\\\\ctxmng-gates\\\\real-workspace\".\n\nCurrent DSH file policy: workspace-write. Any available operation enforced by the DSH file sandbox may modify files under the session workspace: \"C:\\\\Users\\\\admin\\\\AppData\\\\Local\\\\Temp\\\\ctxmng-gates\\\\real-workspace\". Some platform temporary areas may also be writable.\n\nApproval policy: ask. Operations that require approval m",
+        "truncated": false,
+        "redaction_count": 0
+      },
+      {
+        "group_id": "user|skill-catalog|",
+        "category": "user",
+        "source_ref": null,
+        "source_kind": "skill-catalog",
+        "message_refs": [
+          "904ef45a-60a3-497f-9037-a1a1e63cedcd"
+        ],
+        "characters": 1019,
+        "bytes": 1019,
+        "estimated_tokens": 1019,
+        "certainty": "heuristic",
+        "preview": "<system-reminder>\nA skill is a reusable set of task-specific instructions. The following skills are available in this session:\n\n<available_skills>\n- `diagnose-windows-sandbox-acl`: Use on Windows for unexpected DSH sandbox access denials: workspace writes or listing fail, or an ordinarily readable path cannot be read. One bundled command inspects the path and every ancestor and repairs the ACL problems it proves in that same run. Expected confinement denials need no ACL repair.\n</available_skills>\n\nIf the u",
+        "truncated": false,
+        "redaction_count": 0
+      },
+      {
+        "group_id": "user|time-context|",
+        "category": "user",
+        "source_ref": null,
+        "source_kind": "time-context",
+        "message_refs": [
+          "8dfc7596-d8ac-468d-aebc-78820153891d"
+        ],
+        "characters": 261,
+        "bytes": 261,
+        "estimated_tokens": 261,
+        "certainty": "heuristic",
+        "preview": "Time sampled while preparing turn 1, step 1: 2026-11-08T15:20:47+08:00[Asia/Shanghai]\nBrowser time zone for this request: unavailable. Ask the user to clarify otherwise-unqualified dates and times.\nElapsed since the preceding model-visible message: unavailable.",
+        "truncated": false,
+        "redaction_count": 0
+      },
+      {
+        "group_id": "user|user|",
+        "category": "user",
+        "source_ref": null,
+        "source_kind": "user",
+        "message_refs": [
+          "c8d8f8ab-010c-441b-a188-0df7cdb253db"
+        ],
+        "characters": 21,
+        "bytes": 21,
+        "estimated_tokens": 21,
+        "certainty": "identified",
+        "preview": "Reply with exactly OK",
+        "truncated": false,
+        "redaction_count": 0
+      },
+      {
+        "group_id": "tools|tool-definition|",
+        "category": "tools",
+        "source_ref": null,
+        "source_kind": "tool-definition",
+        "message_refs": [],
+        "characters": 28804,
+        "bytes": 28850,
+        "estimated_tokens": 28850,
+        "certainty": "identified",
+        "preview": "[{\"description\":\"Ask the user a concise question when you need confirmation, a choice, or missing information before proceeding.\",\"name\":\"ask_user_question\",\"parameters\":{\"properties\":{\"questions\":{\"description\":\"Questions to ask the user before continuing.\",\"items\":{\"additionalProperties\":true,\"properties\":{\"header\":{\"description\":\"Optional short heading for the question, such as \\\"Confirm\\\" or \\\"Choose Mode\\\".\",\"type\":\"string\"},\"id\":{\"description\":\"Stable id for this question; echoed in the answer.\",\"type",
+        "truncated": false,
+        "redaction_count": 0
+      }
+    ],
+    "estimate": {
+      "method": "utf8_bytes_estimate_v1",
+      "tokenizer_ref": null,
+      "tokens": 36742,
+      "complete": true,
+      "unpriced_modalities": []
+    },
+    "reported_usage": {
+      "request_ref": "ctx-req-1-session-8f1b2c3d-4e5f-4a6b-9c7d-8e9f0a1b2c3d-g1",
+      "input_tokens": 437,
+      "output_tokens": 2,
+      "cached_input_tokens": 8704,
+      "source": "provider_usage_chunk",
+      "is_final": true
+    },
+    "limits": {
+      "context_window": null,
+      "max_output_tokens": null
+    },
+    "truncated": false,
+    "omitted_bytes": 0,
+    "unavailable_reason": null
+  },
+  "timings": {
+    "boot_ms": 2176,
+    "session_create_ms": 42,
+    "prompt_accept_ms": 25,
+    "observation_wait_ms": 1021,
+    "total_ms": 3835
+  },
+  "origin": "http://127.0.0.1:6321",
+  "sessionList": []
+}

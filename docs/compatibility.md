@@ -10,7 +10,7 @@
 | Electron | 44.7.0 | `E:\dsh\version` |
 | app.asar | 182,766,714 bytes | 本机文件 |
 | 本机 Node（实现/测试） | v26.13.0；npm 11.20.0；pnpm 12.16.1 | `node --version` |
-| 设计基线 Node | Node 24.9+ | 设计文本；本机无 Node 24，Node 26 仅作补充运行，不构成对 Node 24 的兼容承诺 |
+| 设计基线 Node | Node 24.9+ | 本机默认 Node 26.13.0；门禁复跑使用 Electron-as-Node **v24.18.1**（Electron 43.3.0），178/178 通过（`evidence/task5-node24.tap`）。Node 24 GUI 未运行 |
 | 另一个本地源码 | `E:\dsh-web\deepseek-harness` @ `ce7073d…`，package 0.2.2-alpha.2 | **不当作现用 Host**，只作只读参考 |
 
 固定文件 SHA256（从 app.asar 只读抽取后计算，与 `docs/software-design.md` 设计表一致）：
@@ -122,6 +122,6 @@ BusinessResponse = {schema_version:1, operation_id, view_epoch, scope_generation
 
 ## 7. 工程与运行环境限制（本轮实现记录）
 
-- 实现期把 rc.5 只读抽取物与临时产物放在工作区 `.work07/`，不进仓库；不修改 `~/.dsh` 现有 profile，不向当前运行中的 Harness 安装。
-- 隔离宿主验证用 rc.5 CLI（从 app.asar 只读抽取后以 `DSH_HOME` 指向工作区隔离目录运行），只证明**加载/RPC 可用性**；Chromium 页面旅程未执行即标未验证。
+- 实现期把 rc.5 只读抽取物与临时产物放在工作区/临时目录，不进仓库；不修改 `~/.dsh` 现有 desktop/web profile。
+- 隔离宿主验证用 rc.5 CLI（从 app.asar 只读抽取后以临时 `DSH_HOME` 运行）：真实 Web/loader/RPC、完整 Headless AgentLoop、真实 Chromium 页面与真实已注册 Provider 测试均已执行，证据见 `docs/acceptance-gates.md` 与 `evidence/task5-*`。OS/Electron 级包捕获出口认证因当前会话未提权被平台阻断，真实面板绑定数据读数仍未执行，均保留未认证。
 - 本机工作区子目录对沙箱化 shell 的写入受 Windows ACL/完整性级别限制；测试临时文件写到系统临时目录，交付文件由文件工具写入。该限制不属于插件行为，也不得写成产品限制。

@@ -1,0 +1,1229 @@
+﻿# 07 context-mng test suite under Node 24 (Electron-as-Node)
+# node=24.18.1 electron=43.3.0 platform=win32
+# command: electron --test --test-isolation=none --test-reporter=tap <file> (one per file; Electron-as-Node only exposes stdout through a pipe)
+
+## access.test.mjs
+TAP version 13
+# Subtest: valid registry loads and reports its identity
+ok 1 - valid registry loads and reports its identity
+  ---
+  duration_ms: 1.9999
+  type: 'test'
+  ...
+# Subtest: registry rejects unknown fields, duplicates, unbound export roots and relative roots
+ok 2 - registry rejects unknown fields, duplicates, unbound export roots and relative roots
+  ---
+  duration_ms: 0.4164
+  type: 'test'
+  ...
+# Subtest: owner-only gate rejects any non-owner caller
+ok 3 - owner-only gate rejects any non-owner caller
+  ---
+  duration_ms: 0.2194
+  type: 'test'
+  ...
+# Subtest: A/B isolation: unbound context and unknown session are denied
+ok 4 - A/B isolation: unbound context and unknown session are denied
+  ---
+  duration_ms: 0.154
+  type: 'test'
+  ...
+# Subtest: inactive binding and stale generation are refused
+ok 5 - inactive binding and stale generation are refused
+  ---
+  duration_ms: 0.1627
+  type: 'test'
+  ...
+# Subtest: context.list never exposes absolute export paths
+ok 6 - context.list never exposes absolute export paths
+  ---
+  duration_ms: 0.1304
+  type: 'test'
+  ...
+# Subtest: export root resolution is limited to the authorized binding
+ok 7 - export root resolution is limited to the authorized binding
+  ---
+  duration_ms: 0.1163
+  type: 'test'
+  ...
+# Subtest: two bindings with distinct scopes do not leak into each other
+ok 8 - two bindings with distinct scopes do not leak into each other
+  ---
+  duration_ms: 4.4657
+  type: 'test'
+  ...
+# Subtest: disposed registry refuses further reads
+ok 9 - disposed registry refuses further reads
+  ---
+  duration_ms: 0.1705
+  type: 'test'
+  ...
+1..9
+# tests 9
+# suites 0
+# pass 9
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 27.2364
+
+
+## cache.test.mjs
+TAP version 13
+# Subtest: revision is per-session monotonic and identical snapshots dedupe
+ok 1 - revision is per-session monotonic and identical snapshots dedupe
+  ---
+  duration_ms: 2.2593
+  type: 'test'
+  ...
+# Subtest: dedupe separates capture stages and request refs
+ok 2 - dedupe separates capture stages and request refs
+  ---
+  duration_ms: 0.4338
+  type: 'test'
+  ...
+# Subtest: put does not mutate the caller observation and stores internal revisions
+ok 3 - put does not mutate the caller observation and stores internal revisions
+  ---
+  duration_ms: 0.1909
+  type: 'test'
+  ...
+# Subtest: entriesForSession is revision ordered; unknown observation ids resolve to null
+ok 4 - entriesForSession is revision ordered; unknown observation ids resolve to null
+  ---
+  duration_ms: 0.9286
+  type: 'test'
+  ...
+# Subtest: per-session snapshot cap evicts the oldest revisions first
+ok 5 - per-session snapshot cap evicts the oldest revisions first
+  ---
+  duration_ms: 0.4318
+  type: 'test'
+  ...
+# Subtest: snapshot byte cap trims previews with honest truncation flags
+ok 6 - snapshot byte cap trims previews with honest truncation flags
+  ---
+  duration_ms: 0.6587
+  type: 'test'
+  ...
+# Subtest: snapshot byte cap drops tail groups when preview trimming is insufficient, without faking completeness
+ok 7 - snapshot byte cap drops tail groups when preview trimming is insufficient, without faking completeness
+  ---
+  duration_ms: 1.6543
+  type: 'test'
+  ...
+# Subtest: default limits keep at most 8 snapshots and trim a single 2 MiB session snapshot
+ok 8 - default limits keep at most 8 snapshots and trim a single 2 MiB session snapshot
+  ---
+  duration_ms: 40.5422
+  type: 'test'
+  ...
+# Subtest: total cache limit evicts whole least-recently-used sessions
+ok 9 - total cache limit evicts whole least-recently-used sessions
+  ---
+  duration_ms: 0.4567
+  type: 'test'
+  ...
+# Subtest: invalidateSession clears bodies and keeps the revision sequence monotonic
+ok 10 - invalidateSession clears bodies and keeps the revision sequence monotonic
+  ---
+  duration_ms: 0.4463
+  type: 'test'
+  ...
+# Subtest: subscribe notifies only new revisions and contains listener failures
+ok 11 - subscribe notifies only new revisions and contains listener failures
+  ---
+  duration_ms: 0.2286
+  type: 'test'
+  ...
+# Subtest: trimmed snapshots are still structurally valid and deterministic
+ok 12 - trimmed snapshots are still structurally valid and deterministic
+  ---
+  duration_ms: 0.444
+  type: 'test'
+  ...
+# Subtest: dispose clears all bodies and refuses further writes
+ok 13 - dispose clears all bodies and refuses further writes
+  ---
+  duration_ms: 0.2656
+  type: 'test'
+  ...
+# Subtest: invalid observations are rejected rather than cached
+ok 14 - invalid observations are rejected rather than cached
+  ---
+  duration_ms: 0.1354
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 68.6547
+
+
+## capture.test.mjs
+TAP version 13
+# Subtest: captureSurface denies unbound sessions before any content read
+ok 1 - captureSurface denies unbound sessions before any content read
+  ---
+  duration_ms: 2.0185
+  type: 'test'
+  ...
+# Subtest: background sampling only touches authorized sessions
+ok 2 - background sampling only touches authorized sessions
+  ---
+  duration_ms: 89.5319
+  type: 'test'
+  ...
+# Subtest: captureSurface returns a contract-valid history projection at a stable boundary
+ok 3 - captureSurface returns a contract-valid history projection at a stable boundary
+  ---
+  duration_ms: 1.2263
+  type: 'test'
+  ...
+# Subtest: a surface change during deriveMessages retries exactly once
+ok 4 - a surface change during deriveMessages retries exactly once
+  ---
+  duration_ms: 0.2575
+  type: 'test'
+  ...
+# Subtest: a boundary that keeps moving is reported stale after one retry and never cached
+ok 5 - a boundary that keeps moving is reported stale after one retry and never cached
+  ---
+  duration_ms: 0.1661
+  type: 'test'
+  ...
+# Subtest: cache write re-checks the binding generation before storing
+ok 6 - cache write re-checks the binding generation before storing
+  ---
+  duration_ms: 0.1656
+  type: 'test'
+  ...
+# Subtest: concurrent captureSurface calls share one sampling run per session
+ok 7 - concurrent captureSurface calls share one sampling run per session
+  ---
+  duration_ms: 0.26
+  type: 'test'
+  ...
+# Subtest: session events coalesce into one sample per window and stay under the refresh rate
+ok 8 - session events coalesce into one sample per window and stay under the refresh rate
+  ---
+  duration_ms: 277.2513
+  type: 'test'
+  ...
+# Subtest: llm/stream middleware is transparent and captures provider usage after completion
+ok 9 - llm/stream middleware is transparent and captures provider usage after completion
+  ---
+  duration_ms: 0.8781
+  type: 'test'
+  ...
+# Subtest: llm/stream middleware leaves unbound sessions completely untouched
+ok 10 - llm/stream middleware leaves unbound sessions completely untouched
+  ---
+  duration_ms: 0.2653
+  type: 'test'
+  ...
+# Subtest: main-request errors pass through and observation failures never break the stream
+ok 11 - main-request errors pass through and observation failures never break the stream
+  ---
+  duration_ms: 0.6237
+  type: 'test'
+  ...
+# Subtest: late usage after cancellation stays with the original request and is non-final
+ok 12 - late usage after cancellation stays with the original request and is non-final
+  ---
+  duration_ms: 0.3473
+  type: 'test'
+  ...
+# Subtest: agent/pre-step is tagged for authorized sessions and the decision is returned unmodified
+ok 13 - agent/pre-step is tagged for authorized sessions and the decision is returned unmodified
+  ---
+  duration_ms: 0.2198
+  type: 'test'
+  ...
+# Subtest: readGroupTexts re-reads the live surface, matches the boundary, then returns redacted texts
+ok 14 - readGroupTexts re-reads the live surface, matches the boundary, then returns redacted texts
+  ---
+  duration_ms: 0.2803
+  type: 'test'
+  ...
+# Subtest: readGroupTexts denies revoked bindings before reading the session
+ok 15 - readGroupTexts denies revoked bindings before reading the session
+  ---
+  duration_ms: 0.155
+  type: 'test'
+  ...
+# Subtest: surface replacement events invalidate the cached snapshot before re-sampling
+ok 16 - surface replacement events invalidate the cached snapshot before re-sampling
+  ---
+  duration_ms: 43.6616
+  type: 'test'
+  ...
+# Subtest: capture dispose unregisters every Host listener and cancels pending sampling
+ok 17 - capture dispose unregisters every Host listener and cancels pending sampling
+  ---
+  duration_ms: 46.6235
+  type: 'test'
+  ...
+# Subtest: request observation and agent pre-step can be disabled by config
+ok 18 - request observation and agent pre-step can be disabled by config
+  ---
+  duration_ms: 31.3905
+  type: 'test'
+  ...
+# Subtest: default projection module is wired when no projector is injected
+ok 19 - default projection module is wired when no projector is injected
+  ---
+  duration_ms: 1.1399
+  type: 'test'
+  ...
+1..19
+# tests 19
+# suites 0
+# pass 19
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 517.8854
+
+
+## client-contract.test.mjs
+TAP version 13
+# Subtest: client.js is a single rc.5 module-loader registration in the exact format
+ok 1 - client.js is a single rc.5 module-loader registration in the exact format
+  ---
+  duration_ms: 1.9139
+  type: 'test'
+  ...
+# Subtest: ui modules are embedded byte-identically in client.js
+ok 2 - ui modules are embedded byte-identically in client.js
+  ---
+  duration_ms: 0.5098
+  type: 'test'
+  ...
+# Subtest: locale dictionaries are embedded exactly from locale/*.json
+ok 3 - locale dictionaries are embedded exactly from locale/*.json
+  ---
+  duration_ms: 0.8697
+  type: 'test'
+  ...
+# Subtest: all literal locale keys used by the panel exist in both dictionaries
+ok 4 - all literal locale keys used by the panel exist in both dictionaries
+  ---
+  duration_ms: 0.168
+  type: 'test'
+  ...
+# Subtest: client source contains no HTML injection, disk access or unfixed network target
+ok 5 - client source contains no HTML injection, disk access or unfixed network target
+  ---
+  duration_ms: 0.9955
+  type: 'test'
+  ...
+# Subtest: factory is side-effect free and returns the declared plugin face
+ok 6 - factory is side-effect free and returns the declared plugin face
+  ---
+  duration_ms: 0.5127
+  type: 'test'
+  ...
+# Subtest: apply registers the main panel, sidebar entry, locale and returns cleanup
+ok 7 - apply registers the main panel, sidebar entry, locale and returns cleanup
+  ---
+  duration_ms: 0.8788
+  type: 'test'
+  ...
+# Subtest: client-embedded store bootstraps context.list and observation.get with the wire envelope
+ok 8 - client-embedded store bootstraps context.list and observation.get with the wire envelope
+  ---
+  duration_ms: 4.3086
+  type: 'test'
+  ...
+# Subtest: client-embedded store drops a late response after a session switch (epoch abort)
+ok 9 - client-embedded store drops a late response after a session switch (epoch abort)
+  ---
+  duration_ms: 0.994
+  type: 'test'
+  ...
+# Subtest: client-embedded store maps transport failures to fixed codes without raw text
+ok 10 - client-embedded store maps transport failures to fixed codes without raw text
+  ---
+  duration_ms: 0.8097
+  type: 'test'
+  ...
+# Subtest: report.export is user-triggered, validated and never auto-retried
+ok 11 - report.export is user-triggered, validated and never auto-retried
+  ---
+  duration_ms: 656.5028
+  type: 'test'
+  ...
+# Subtest: store: unbound session is never sampled
+ok 12 - store: unbound session is never sampled
+  ---
+  duration_ms: 1.2599
+  type: 'test'
+  ...
+# Subtest: store: one in-flight poll at most, gated by visibility and pause
+ok 13 - store: one in-flight poll at most, gated by visibility and pause
+  ---
+  duration_ms: 1.4353
+  type: 'test'
+  ...
+# Subtest: store: close aborts the in-flight poll, increments epoch and clears body text
+ok 14 - store: close aborts the in-flight poll, increments epoch and clears body text
+  ---
+  duration_ms: 1.2433
+  type: 'test'
+  ...
+# Subtest: store: generation mismatch and operation mismatch are dropped
+ok 15 - store: generation mismatch and operation mismatch are dropped
+  ---
+  duration_ms: 0.401
+  type: 'test'
+  ...
+# Subtest: store: business rejections map to explicit states; transport failures never leak text
+ok 16 - store: business rejections map to explicit states; transport failures never leak text
+  ---
+  duration_ms: 0.8004
+  type: 'test'
+  ...
+# Subtest: store: group.read pagination fetches pages and clears text on a new observation
+ok 17 - store: group.read pagination fetches pages and clears text on a new observation
+  ---
+  duration_ms: 0.7111
+  type: 'test'
+  ...
+# Subtest: store: export state machine covers saved, conflict and denied without retry
+ok 18 - store: export state machine covers saved, conflict and denied without retry
+  ---
+  duration_ms: 0.5264
+  type: 'test'
+  ...
+# Subtest: store: disposed store stops notifying subscribers
+ok 19 - store: disposed store stops notifying subscribers
+  ---
+  duration_ms: 0.3104
+  type: 'test'
+  ...
+# Subtest: client BusinessResponse validation matches src/contracts.mjs on a matrix
+ok 20 - client BusinessResponse validation matches src/contracts.mjs on a matrix
+  ---
+  duration_ms: 0.2709
+  type: 'test'
+  ...
+# Subtest: client observation validation accepts fixtures the contract accepts
+ok 21 - client observation validation accepts fixtures the contract accepts
+  ---
+  duration_ms: 0.5259
+  type: 'test'
+  ...
+# Subtest: panel renders the ready journey with separated estimate and provider usage
+ok 22 - panel renders the ready journey with separated estimate and provider usage
+  ---
+  duration_ms: 1.1696
+  type: 'test'
+  ...
+# Subtest: panel shows explicit empty/unbound/denied/stale/unavailable/error states
+ok 23 - panel shows explicit empty/unbound/denied/stale/unavailable/error states
+  ---
+  duration_ms: 0.8212
+  type: 'test'
+  ...
+# Subtest: panel expands a group and renders the fetched redacted text as children
+ok 24 - panel expands a group and renders the fetched redacted text as children
+  ---
+  duration_ms: 0.453
+  type: 'test'
+  ...
+# Subtest: panel pause/resume and stage buttons drive the store
+ok 25 - panel pause/resume and stage buttons drive the store
+  ---
+  duration_ms: 0.4517
+  type: 'test'
+  ...
+# Subtest: panel without a store degrades to an explicit unavailable state
+ok 26 - panel without a store degrades to an explicit unavailable state
+  ---
+  duration_ms: 0.1044
+  type: 'test'
+  ...
+1..26
+# tests 26
+# suites 0
+# pass 26
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 699.5932
+
+
+## contracts.test.mjs
+TAP version 13
+# Subtest: default config is read-only and has an empty registry
+ok 1 - default config is read-only and has an empty registry
+  ---
+  duration_ms: 1.5469
+  type: 'test'
+  ...
+# Subtest: maintenance cannot be enabled in the read-only first version
+ok 2 - maintenance cannot be enabled in the read-only first version
+  ---
+  duration_ms: 0.1416
+  type: 'test'
+  ...
+# Subtest: unknown config keys and bad ranges fail closed
+ok 3 - unknown config keys and bad ranges fail closed
+  ---
+  duration_ms: 0.3146
+  type: 'test'
+  ...
+# Subtest: an invalid registry prevents plugin activation (no implicit fallback)
+ok 4 - an invalid registry prevents plugin activation (no implicit fallback)
+  ---
+  duration_ms: 0.1117
+  type: 'test'
+  ...
+# Subtest: config normalization is a detached copy, not a live reference
+ok 5 - config normalization is a detached copy, not a live reference
+  ---
+  duration_ms: 0.1338
+  type: 'test'
+  ...
+# Subtest: scope/boundary/observation/report validators accept the fixtures
+ok 6 - scope/boundary/observation/report validators accept the fixtures
+  ---
+  duration_ms: 0.7171
+  type: 'test'
+  ...
+# Subtest: observation rejects unknown extra fields and a wrong schema version
+ok 7 - observation rejects unknown extra fields and a wrong schema version
+  ---
+  duration_ms: 0.2566
+  type: 'test'
+  ...
+# Subtest: report validators require the 07 capability and valid nested observation
+ok 8 - report validators require the 07 capability and valid nested observation
+  ---
+  duration_ms: 0.2155
+  type: 'test'
+  ...
+# Subtest: rpc request envelope is strict
+ok 9 - rpc request envelope is strict
+  ---
+  duration_ms: 0.1526
+  type: 'test'
+  ...
+# Subtest: business responses are a closed union
+ok 10 - business responses are a closed union
+  ---
+  duration_ms: 0.1856
+  type: 'test'
+  ...
+# Subtest: all failure reason codes map to a registered business status
+ok 11 - all failure reason codes map to a registered business status
+  ---
+  duration_ms: 0.1121
+  type: 'test'
+  ...
+# Subtest: canonical JSON is key-order independent and UTF-8 byte counting is exact
+ok 12 - canonical JSON is key-order independent and UTF-8 byte counting is exact
+  ---
+  duration_ms: 0.3318
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 22.6372
+
+
+## estimate.test.mjs
+TAP version 13
+# Subtest: exported method matches the frozen contract method
+ok 1 - exported method matches the frozen contract method
+  ---
+  duration_ms: 1.276
+  type: 'test'
+  ...
+# Subtest: utf8Bytes counts UTF-8 bytes, not UTF-16 code units
+ok 2 - utf8Bytes counts UTF-8 bytes, not UTF-16 code units
+  ---
+  duration_ms: 0.1135
+  type: 'test'
+  ...
+# Subtest: estimateGroupText returns method, byte tokens and characters
+ok 3 - estimateGroupText returns method, byte tokens and characters
+  ---
+  duration_ms: 0.8451
+  type: 'test'
+  ...
+# Subtest: estimateGroupText tokens always equal utf8Bytes of the same text
+ok 4 - estimateGroupText tokens always equal utf8Bytes of the same text
+  ---
+  duration_ms: 0.1357
+  type: 'test'
+  ...
+# Subtest: combineEstimates of no parts is a complete zero estimate
+ok 5 - combineEstimates of no parts is a complete zero estimate
+  ---
+  duration_ms: 0.2289
+  type: 'test'
+  ...
+# Subtest: combineEstimates sums priced parts and stays complete
+ok 6 - combineEstimates sums priced parts and stays complete
+  ---
+  duration_ms: 0.0895
+  type: 'test'
+  ...
+# Subtest: an unknown (null) part forces an unknown total and incomplete estimate
+ok 7 - an unknown (null) part forces an unknown total and incomplete estimate
+  ---
+  duration_ms: 0.0773
+  type: 'test'
+  ...
+# Subtest: unpriced modalities are unioned and sorted deterministically
+ok 8 - unpriced modalities are unioned and sorted deterministically
+  ---
+  duration_ms: 0.0618
+  type: 'test'
+  ...
+# Subtest: a truncated part keeps its known count but flags the estimate incomplete
+ok 9 - a truncated part keeps its known count but flags the estimate incomplete
+  ---
+  duration_ms: 0.0787
+  type: 'test'
+  ...
+# Subtest: combineEstimates output always validates
+ok 10 - combineEstimates output always validates
+  ---
+  duration_ms: 0.1335
+  type: 'test'
+  ...
+1..10
+# tests 10
+# suites 0
+# pass 10
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 20.2968
+
+
+## export.test.mjs
+TAP version 13
+# Subtest: writes canonical JSON atomically and returns a root-relative receipt
+ok 1 - writes canonical JSON atomically and returns a root-relative receipt
+  ---
+  duration_ms: 8.7337
+  type: 'test'
+  ...
+# Subtest: creates the temporary file in the same directory and fsyncs before rename
+ok 2 - creates the temporary file in the same directory and fsyncs before rename
+  ---
+  duration_ms: 4.541
+  type: 'test'
+  ...
+# Subtest: repeating identical content is idempotent (saved, same digest, no rewrite)
+ok 3 - repeating identical content is idempotent (saved, same digest, no rewrite)
+  ---
+  duration_ms: 4.4032
+  type: 'test'
+  ...
+# Subtest: different content under the same file name conflicts without overwrite
+ok 4 - different content under the same file name conflicts without overwrite
+  ---
+  duration_ms: 4.6032
+  type: 'test'
+  ...
+# Subtest: rejects relative and missing export roots
+ok 5 - rejects relative and missing export roots
+  ---
+  duration_ms: 0.5618
+  type: 'test'
+  ...
+# Subtest: rejects path traversal and non-leaf file names before touching disk
+ok 6 - rejects path traversal and non-leaf file names before touching disk
+  ---
+  duration_ms: 1.8518
+  type: 'test'
+  ...
+# Subtest: rejects an existing directory target and never replaces it
+ok 7 - rejects an existing directory target and never replaces it
+  ---
+  duration_ms: 1.979
+  type: 'test'
+  ...
+# Subtest: rejects a symlinked target (real symlink when the host allows it)
+ok 8 - rejects a symlinked target (real symlink when the host allows it)
+  ---
+  duration_ms: 4.2735
+  type: 'test'
+  ...
+# real symlink unavailable on this host (EPERM); using injected fs adapter for the same code path
+# Subtest: denies a symlink reported by an injected fs adapter
+ok 9 - denies a symlink reported by an injected fs adapter
+  ---
+  duration_ms: 2.4704
+  type: 'test'
+  ...
+# Subtest: denies a symlinked parent (root realpath differs from the registered root)
+ok 10 - denies a symlinked parent (root realpath differs from the registered root)
+  ---
+  duration_ms: 2.1213
+  type: 'test'
+  ...
+# Subtest: rejects an oversize report body via the configured limit
+ok 11 - rejects an oversize report body via the configured limit
+  ---
+  duration_ms: 1.2612
+  type: 'test'
+  ...
+# Subtest: rejects report bodies that do not satisfy the report contract
+ok 12 - rejects report bodies that do not satisfy the report contract
+  ---
+  duration_ms: 1.1348
+  type: 'test'
+  ...
+# Subtest: refuses report bodies containing unredacted secret-like strings
+ok 13 - refuses report bodies containing unredacted secret-like strings
+  ---
+  duration_ms: 1.1492
+  type: 'test'
+  ...
+# Subtest: cleans up the temp file and keeps the target absent when rename fails
+ok 14 - cleans up the temp file and keeps the target absent when rename fails
+  ---
+  duration_ms: 3.7988
+  type: 'test'
+  ...
+# Subtest: rejects an invalid hidden writer limits object defensively
+ok 15 - rejects an invalid hidden writer limits object defensively
+  ---
+  duration_ms: 0.1131
+  type: 'test'
+  ...
+1..15
+# tests 15
+# suites 0
+# pass 15
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 63.1945
+
+
+## projection.test.mjs
+TAP version 13
+# Subtest: projectMessages returns exactly the frozen fragment shape and validates
+ok 1 - projectMessages returns exactly the frozen fragment shape and validates
+  ---
+  duration_ms: 3.4713
+  type: 'test'
+  ...
+# Subtest: groups use deterministic provenance ids and trusted source classification
+ok 2 - groups use deterministic provenance ids and trusted source classification
+  ---
+  duration_ms: 0.4965
+  type: 'test'
+  ...
+# Subtest: unknown source and body words never decide category or permission
+ok 3 - unknown source and body words never decide category or permission
+  ---
+  duration_ms: 0.2467
+  type: 'test'
+  ...
+# Subtest: synthetic secrets are absent from previews, group texts and digests surface
+ok 4 - synthetic secrets are absent from previews, group texts and digests surface
+  ---
+  duration_ms: 0.393
+  type: 'test'
+  ...
+# Subtest: observed_digest is deterministic and covers redacted content only
+ok 5 - observed_digest is deterministic and covers redacted content only
+  ---
+  duration_ms: 0.8293
+  type: 'test'
+  ...
+# Subtest: provider-reported usage is never apportioned into group estimates
+ok 6 - provider-reported usage is never apportioned into group estimates
+  ---
+  duration_ms: 0.4202
+  type: 'test'
+  ...
+# Subtest: oversized group text is truncated with explicit flags instead of dropped
+ok 7 - oversized group text is truncated with explicit flags instead of dropped
+  ---
+  duration_ms: 0.1334
+  type: 'test'
+  ...
+# Subtest: preview honors maxPreviewChars without claiming data loss
+ok 8 - preview honors maxPreviewChars without claiming data loss
+  ---
+  duration_ms: 0.0742
+  type: 'test'
+  ...
+# Subtest: image and file modalities keep estimated tokens unknown and unpriced
+ok 9 - image and file modalities keep estimated tokens unknown and unpriced
+  ---
+  duration_ms: 0.8172
+  type: 'test'
+  ...
+# Subtest: tool definitions are an identified tools group and are redacted
+ok 10 - tool definitions are an identified tools group and are redacted
+  ---
+  duration_ms: 0.2159
+  type: 'test'
+  ...
+# Subtest: collectGroupTexts agrees with projectMessages for ids, counts and redactions
+ok 11 - collectGroupTexts agrees with projectMessages for ids, counts and redactions
+  ---
+  duration_ms: 0.2544
+  type: 'test'
+  ...
+# Subtest: empty input is a complete zero projection with a deterministic digest
+ok 12 - empty input is a complete zero projection with a deterministic digest
+  ---
+  duration_ms: 0.1197
+  type: 'test'
+  ...
+# Subtest: group ids and digest are stable across re-reads and extra messages
+ok 13 - group ids and digest are stable across re-reads and extra messages
+  ---
+  duration_ms: 0.2988
+  type: 'test'
+  ...
+# Subtest: a custom policy redactor is honored deterministically
+ok 14 - a custom policy redactor is honored deterministically
+  ---
+  duration_ms: 0.0915
+  type: 'test'
+  ...
+# Subtest: malformed or legacy messages never throw and stay unknown
+ok 15 - malformed or legacy messages never throw and stay unknown
+  ---
+  duration_ms: 0.1326
+  type: 'test'
+  ...
+# Subtest: projectMessages only ever covers the messages passed for one session (A/B)
+ok 16 - projectMessages only ever covers the messages passed for one session (A/B)
+  ---
+  duration_ms: 0.2628
+  type: 'test'
+  ...
+# Subtest: projection never mutates the input messages or tool definitions
+ok 17 - projection never mutates the input messages or tool definitions
+  ---
+  duration_ms: 0.2501
+  type: 'test'
+  ...
+# Subtest: the 05 marker whitelist is explicit prefixes only
+ok 18 - the 05 marker whitelist is explicit prefixes only
+  ---
+  duration_ms: 0.0995
+  type: 'test'
+  ...
+# Subtest: a trusted label without a v1 composition bucket stays unknown but identified
+ok 19 - a trusted label without a v1 composition bucket stays unknown but identified
+  ---
+  duration_ms: 0.0514
+  type: 'test'
+  ...
+# Subtest: the maxGroups bound drops tail groups with truncated/omitted flags
+ok 20 - the maxGroups bound drops tail groups with truncated/omitted flags
+  ---
+  duration_ms: 0.1077
+  type: 'test'
+  ...
+# Subtest: truncation never emits a lone surrogate half
+ok 21 - truncation never emits a lone surrogate half
+  ---
+  duration_ms: 0.5618
+  type: 'test'
+  ...
+# Subtest: a trimmed fragment can be re-hashed so digest and stored groups stay consistent
+ok 22 - a trimmed fragment can be re-hashed so digest and stored groups stay consistent
+  ---
+  duration_ms: 0.2189
+  type: 'test'
+  ...
+# Subtest: observation and report schemas parse and match the contract key sets
+ok 23 - observation and report schemas parse and match the contract key sets
+  ---
+  duration_ms: 5.4408
+  type: 'test'
+  ...
+1..23
+# tests 23
+# suites 0
+# pass 23
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 32.0358
+
+
+## redact.test.mjs
+TAP version 13
+# Subtest: factory reports the REDACT-1 policy revision by default
+ok 1 - factory reports the REDACT-1 policy revision by default
+  ---
+  duration_ms: 0.7493
+  type: 'test'
+  ...
+# Subtest: factory honors an explicit policy revision
+ok 2 - factory honors an explicit policy revision
+  ---
+  duration_ms: 0.0629
+  type: 'test'
+  ...
+# Subtest: factory exposes only redactText and the revision
+ok 3 - factory exposes only redactText and the revision
+  ---
+  duration_ms: 0.8183
+  type: 'test'
+  ...
+# Subtest: redacts every registered synthetic secret category
+ok 4 - redacts every registered synthetic secret category
+  ---
+  duration_ms: 0.8054
+  type: 'test'
+  ...
+# Subtest: placeholder names the category and never keeps the captured value
+ok 5 - placeholder names the category and never keeps the captured value
+  ---
+  duration_ms: 0.093
+  type: 'test'
+  ...
+# Subtest: password assignment keeps the key name but removes the value
+ok 6 - password assignment keeps the key name but removes the value
+  ---
+  duration_ms: 0.0863
+  type: 'test'
+  ...
+# Subtest: counts every occurrence and reports all categories
+ok 7 - counts every occurrence and reports all categories
+  ---
+  duration_ms: 0.0777
+  type: 'test'
+  ...
+# Subtest: ordinary prose is byte-for-byte unchanged
+ok 8 - ordinary prose is byte-for-byte unchanged
+  ---
+  duration_ms: 0.5514
+  type: 'test'
+  ...
+# Subtest: short lookalike prefixes and bare scheme names stay readable
+ok 9 - short lookalike prefixes and bare scheme names stay readable
+  ---
+  duration_ms: 0.0915
+  type: 'test'
+  ...
+# Subtest: redaction is deterministic for the same input
+ok 10 - redaction is deterministic for the same input
+  ---
+  duration_ms: 0.1746
+  type: 'test'
+  ...
+# Subtest: redaction is idempotent: a second pass finds nothing
+ok 11 - redaction is idempotent: a second pass finds nothing
+  ---
+  duration_ms: 0.1039
+  type: 'test'
+  ...
+# Subtest: empty input yields an empty result
+ok 12 - empty input yields an empty result
+  ---
+  duration_ms: 0.0472
+  type: 'test'
+  ...
+# Subtest: redaction never logs the captured text
+ok 13 - redaction never logs the captured text
+  ---
+  duration_ms: 0.1358
+  type: 'test'
+  ...
+1..13
+# tests 13
+# suites 0
+# pass 13
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 22.4215
+
+
+## rpc.test.mjs
+TAP version 13
+# Subtest: observation.get returns a BusinessResponse echoing correlation ids
+ok 1 - observation.get returns a BusinessResponse echoing correlation ids
+  ---
+  duration_ms: 1.2352
+  type: 'test'
+  ...
+# Subtest: caller comes from the peer, never from the payload
+ok 2 - caller comes from the peer, never from the payload
+  ---
+  duration_ms: 0.1928
+  type: 'test'
+  ...
+# Subtest: non-owner or dead peers are denied and never reach the service
+ok 3 - non-owner or dead peers are denied and never reach the service
+  ---
+  duration_ms: 0.1238
+  type: 'test'
+  ...
+# Subtest: context.list uses its own envelope and rejects a forged envelope field
+ok 4 - context.list uses its own envelope and rejects a forged envelope field
+  ---
+  duration_ms: 0.2537
+  type: 'test'
+  ...
+# Subtest: unknown endpoints and malformed inputs are fixed invalid responses
+ok 5 - unknown endpoints and malformed inputs are fixed invalid responses
+  ---
+  duration_ms: 0.2676
+  type: 'test'
+  ...
+# Subtest: contract errors map to their registered reason code, other errors become INTERNAL_FAILURE
+ok 6 - contract errors map to their registered reason code, other errors become INTERNAL_FAILURE
+  ---
+  duration_ms: 0.2974
+  type: 'test'
+  ...
+# Subtest: oversized requests are refused before parsing
+ok 7 - oversized requests are refused before parsing
+  ---
+  duration_ms: 0.1958
+  type: 'test'
+  ...
+# Subtest: oversized responses are replaced by a fixed failure, never truncated data
+ok 8 - oversized responses are replaced by a fixed failure, never truncated data
+  ---
+  duration_ms: 3.5086
+  type: 'test'
+  ...
+# Subtest: handler never throws even when service is catastrophically broken
+ok 9 - handler never throws even when service is catastrophically broken
+  ---
+  duration_ms: 0.327
+  type: 'test'
+  ...
+# Subtest: callerFromPeer rejects malformed peers and mapErrorReason keeps the allow-list
+ok 10 - callerFromPeer rejects malformed peers and mapErrorReason keeps the allow-list
+  ---
+  duration_ms: 1.0112
+  type: 'test'
+  ...
+# Subtest: validateListEnvelope requires the list-shaped envelope only
+ok 11 - validateListEnvelope requires the list-shaped envelope only
+  ---
+  duration_ms: 0.1599
+  type: 'test'
+  ...
+# Subtest: business failure responses are well-formed and carry no data field
+ok 12 - business failure responses are well-formed and carry no data field
+  ---
+  duration_ms: 0.061
+  type: 'test'
+  ...
+1..12
+# tests 12
+# suites 0
+# pass 12
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 28.0806
+
+
+## service.test.mjs
+TAP version 13
+# Subtest: context.list is owner-only and returns only registered contexts
+ok 1 - context.list is owner-only and returns only registered contexts
+  ---
+  duration_ms: 1.6029
+  type: 'test'
+  ...
+# Subtest: observation.get returns a cached snapshot and honors after_revision
+ok 2 - observation.get returns a cached snapshot and honors after_revision
+  ---
+  duration_ms: 0.9848
+  type: 'test'
+  ...
+# Subtest: observation.get never fabricates request observations
+ok 3 - observation.get never fabricates request observations
+  ---
+  duration_ms: 0.1348
+  type: 'test'
+  ...
+# Subtest: observation.get captures the live surface when empty and validates it
+ok 4 - observation.get captures the live surface when empty and validates it
+  ---
+  duration_ms: 0.6926
+  type: 'test'
+  ...
+# Subtest: capture denials/unavailable/stale map to registered reasons
+ok 5 - capture denials/unavailable/stale map to registered reasons
+  ---
+  duration_ms: 0.3089
+  type: 'test'
+  ...
+# Subtest: group.read rejects foreign observations and unknown groups
+ok 6 - group.read rejects foreign observations and unknown groups
+  ---
+  duration_ms: 0.5446
+  type: 'test'
+  ...
+# Subtest: group.read pages redacted text without splitting surrogate pairs
+ok 7 - group.read pages redacted text without splitting surrogate pairs
+  ---
+  duration_ms: 0.3993
+  type: 'test'
+  ...
+# Subtest: pageText handles empty text, offsets past the end and surrogate boundaries
+ok 8 - pageText handles empty text, offsets past the end and surrogate boundaries
+  ---
+  duration_ms: 0.111
+  type: 'test'
+  ...
+# Subtest: group.read rejects a surface that changed after the observation
+ok 9 - group.read rejects a surface that changed after the observation
+  ---
+  duration_ms: 0.2318
+  type: 'test'
+  ...
+# Subtest: export requires the registered root, unchanged revision, and validated report
+ok 10 - export requires the registered root, unchanged revision, and validated report
+  ---
+  duration_ms: 0.3912
+  type: 'test'
+  ...
+# Subtest: export conflict and write failure are surfaced without raw errors
+ok 11 - export conflict and write failure are surfaced without raw errors
+  ---
+  duration_ms: 0.2544
+  type: 'test'
+  ...
+# Subtest: disposed service refuses requests
+ok 12 - disposed service refuses requests
+  ---
+  duration_ms: 0.0949
+  type: 'test'
+  ...
+# Subtest: service describe exposes registry/cache/policy facts only
+ok 13 - service describe exposes registry/cache/policy facts only
+  ---
+  duration_ms: 0.0971
+  type: 'test'
+  ...
+# Subtest: repeat export of one observation revision is byte-identical and saved (no conflict)
+ok 14 - repeat export of one observation revision is byte-identical and saved (no conflict)
+  ---
+  duration_ms: 7.0963
+  type: 'test'
+  ...
+1..14
+# tests 14
+# suites 0
+# pass 14
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 34.0682
+
+
+## transport.test.mjs
+TAP version 13
+# Subtest: registers one exact POST route per business endpoint under /api
+ok 1 - registers one exact POST route per business endpoint under /api
+  ---
+  duration_ms: 1.5279
+  type: 'test'
+  ...
+# Subtest: context.list answers with a direct BusinessResponse and owner caller
+ok 2 - context.list answers with a direct BusinessResponse and owner caller
+  ---
+  duration_ms: 22.8789
+  type: 'test'
+  ...
+# Subtest: observation.get and unknown endpoints follow the fixed mapping
+ok 3 - observation.get and unknown endpoints follow the fixed mapping
+  ---
+  duration_ms: 0.9218
+  type: 'test'
+  ...
+# Subtest: rc.5 exact routes pass no peer: the Host owner gate is the recorded caller
+ok 4 - rc.5 exact routes pass no peer: the Host owner gate is the recorded caller
+  ---
+  duration_ms: 1.2387
+  type: 'test'
+  ...
+# Subtest: non-owner peers are denied by the peer-derived caller, never granted
+ok 5 - non-owner peers are denied by the peer-derived caller, never granted
+  ---
+  duration_ms: 0.5684
+  type: 'test'
+  ...
+# Subtest: wrong content type, malformed JSON and oversized payloads are fixed invalid responses
+ok 6 - wrong content type, malformed JSON and oversized payloads are fixed invalid responses
+  ---
+  duration_ms: 0.7098
+  type: 'test'
+  ...
+# Subtest: a throwing rpc handler still yields a fixed internal failure
+ok 7 - a throwing rpc handler still yields a fixed internal failure
+  ---
+  duration_ms: 0.3578
+  type: 'test'
+  ...
+# Subtest: dispose removes every registered route; registration failures stay contained
+ok 8 - dispose removes every registered route; registration failures stay contained
+  ---
+  duration_ms: 0.091
+  type: 'test'
+  ...
+# Subtest: transport never exposes absolute paths in responses
+ok 9 - transport never exposes absolute paths in responses
+  ---
+  duration_ms: 0.3975
+  type: 'test'
+  ...
+# Subtest: streaming route body is read with a hard byte bound before parsing
+ok 10 - streaming route body is read with a hard byte bound before parsing
+  ---
+  duration_ms: 0.7253
+  type: 'test'
+  ...
+# Subtest: malformed content-length and failing body streams are invalid requests
+ok 11 - malformed content-length and failing body streams are invalid requests
+  ---
+  duration_ms: 0.2724
+  type: 'test'
+  ...
+1..11
+# tests 11
+# suites 0
+# pass 11
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 48.6622
+
+# TOTAL files=12 tests=178 pass=178 fail=0

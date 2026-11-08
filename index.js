@@ -27,7 +27,10 @@ import { createRpcHandler } from './src/rpc.mjs';
 import { API_BASE, createContextFetchTransport } from './src/transport.mjs';
 
 export const name = 'dsh-context-mng';
-export const inject = ['connection', 'sessions'];
+// Observation only needs the session service. The browser transport is mounted
+// lazily only when a `connection` service exists (Web profiles); headless/CLI
+// profiles still get the observation loop and can be used for Host-side gates.
+export const inject = ['sessions'];
 
 /**
  * @param {import('@deepseek-ai/cordis').Context} ctx
@@ -94,12 +97,19 @@ export function apply(ctx, rawConfig) {
   // design's assumed `connection.rpc.handle` is not served to profile plugins
   // by the installed rc.5 bytes (see docs/design-change-ctx-rpc-02.md
   // CTX-RPC-03). The Fetch route keeps the same peer-derived caller and the
-  // same fixed BusinessResponse/error mapping.
+  // same fixed BusinessResponse/error mapping. Headless/CLI profiles have no
+  // `connection` service, so this block simply never runs there.
   const rpcHandler = createRpcHandler({ service, limits: LIMITS, logger });
   try {
-    disposers.push(createContextFetchTransport({ connection: ctx.connection, rpcHandler, logger }));
+    ctx.inject(['connection'], (connectionCtx) => {
+      try {
+        disposers.push(createContextFetchTransport({ connection: connectionCtx.connection, rpcHandler, logger }));
+      } catch (error) {
+        logger?.warn?.(`context-mng: browser transport unavailable: ${error instanceof Error ? error.name : 'unknown'}`);
+      }
+    });
   } catch (error) {
-    logger?.warn?.(`context-mng: browser transport unavailable: ${error instanceof Error ? error.name : 'unknown'}`);
+    logger?.warn?.(`context-mng: connection service unavailable: ${error instanceof Error ? error.name : 'unknown'}`);
   }
 
   ctx.effect(() => disposeAll, 'context-mng: dispose observation, browser transport and access registry');

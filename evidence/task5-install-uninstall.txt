@@ -1,0 +1,33 @@
+07 context-mng 安装/卸载验收记录（2026-11-08）
+
+环境：隔离 DSH_HOME（%TEMP%/ctxmng-gates/dsh-install-home），rc.5 CLI 从 app.asar 只读抽取，
+profile `07inst` 由 shipped web 模板创建；命令均为宿主支持路径（`dsh plugin` 转发 pnpm），
+全部离线（--offline），未访问 registry。
+
+1) 安装
+命令：node <extracted>/@deepseek-ai/dsh/lib/bin.js plugin --profile 07inst add file:E:/dsh/plugin/07-context-management --offline
+exit=0
+输出要点：Packages: +1；dependencies: + dsh-context-mng file:E:/dsh/plugin/07-context-management；
+profile package.json 同时出现：
+  dependencies: { "dsh-context-mng": "file:E:/dsh/plugin/07-context-management" }
+  dsh.profile.bundles: [ "@deepseek-ai/dsh-base", "@deepseek-ai/dsh-web-app", "dsh-context-mng" ]
+
+安装后启动真实 web Host（--host 127.0.0.1 --port 0 --no-open），cookie 认证后请求：
+POST /api/context-mng/context.list
+HTTP 200
+{"schema_version":1,"operation_id":"op-inst","view_epoch":1,"scope_generation":0,"status":"ok","data":{"contexts":[]}}
+
+2) 卸载
+命令：node <extracted>/@deepseek-ai/dsh/lib/bin.js plugin --profile 07inst remove dsh-context-mng --offline
+exit=0
+输出要点：Packages: -1；dependencies: - dsh-context-mng；
+profile package.json 恢复为仅 base + web-app，dsh.profile.bundles 不再含插件。
+
+卸载后重启同一真实 web Host，cookie 认证后请求同一端点：
+POST /api/context-mng/context.list
+HTTP 404（Host 路由层无该 route；插件未加载）
+
+3) 限制
+- 这是隔离测试 profile 的安装/卸载，不是用户现有 desktop/web profile 的安装。
+- 未测试“更新已有安装包需要重启”的宿主行为；首次安装激活通过真实 Host 启动验证。
+- 安装包来自本地工作目录（file:），不是 registry 发布包；与设计“固定制品/本地目录安装”一致。
